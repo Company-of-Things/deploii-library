@@ -5,7 +5,7 @@ on:
   - pull_request
 
 jobs: 
-  build:
+  build-for-arduino:
     runs-on: ubuntu-latest
 
       strategy:
