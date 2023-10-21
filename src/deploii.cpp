@@ -4,7 +4,7 @@ Deploii::Deploii(const char *mcuID) {
    _mcuID = mcuID;
 }
 
-void Deploii::connect_wifi(const char *ssid, const char *password) {
+void Deploii::connect_wifi(char *ssid, const char *password) {
 
    Serial.begin(9600);
    WiFi.begin(ssid, password);

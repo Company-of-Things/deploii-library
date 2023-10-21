@@ -21,7 +21,7 @@ class Deploii {
  public:
    Deploii(const char *mcuID);
    void loop();
-   void connect_wifi(const char *ssid, const char *password);
+   void connect_wifi(char *ssid, const char *password);
 };
 
 #endif
