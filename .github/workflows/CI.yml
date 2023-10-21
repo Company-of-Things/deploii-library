@@ -20,6 +20,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           fqbn: ${{ matrix.fqbn }}
           libraries: |
+            - source-path: ./
             - name: WiFi
             - name: WebSockets
 
@@ -44,5 +45,6 @@ jobs:
           cli-compile-flags: |
             - --warnings="none"
           libraries: |
+            - source-path: ./
             - name: WiFi
             - name: WebSockets
