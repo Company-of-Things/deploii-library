@@ -2,26 +2,42 @@
 #define Deploii_h
 
 #include "Arduino.h"
+#include "./handler/deploii_handler.h"
 
-#include <WiFi.h>
-#include <WebSocketsClient.h>
+enum class Medium {
+   None,
+   WiFi,
+   NarrowBand
+};
 
-#define DEPLOII_HOST "www.deploii.no"
-#define DEPLOII_PORT 5215
-#define DEPLOII_URL "/ws"
+enum class Protocol {
+   None,
+   WebSockets,
+   HTTP,
+   MQTT
+};
 
 class Deploii {
- private:
-   WebSocketsClient _ws;
-   const char *_mcuID;
-   void eventHandler(WStype_t type, unsigned char *payload, size_t length);
-
-   bool _connectedWiFi = false;
-
  public:
-   Deploii(const char *mcuID);
+   Deploii(char* boardID, Medium medium, Protocol protocol);
+   ~Deploii();
+
+   void send();
    void loop();
-   void connect_wifi(char *ssid, const char *password);
+   void connect();
+   void connect(const char* ssid,
+                const char* pwd,
+                const char* host = Deploii_HOST,
+                const int port = Deploii_PORT,
+                const char* url = Deploii_WS_URL,
+                bool ssl = true);
+
+ private:
+   Medium _medium;
+   Protocol _protocol;
+   char* _boardID;
+   DeploiiHandler* _handler;
+   DeploiiHandler* selectHandler();
 };
 
 #endif

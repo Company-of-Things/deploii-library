@@ -1,27 +1,38 @@
 #include "deploii.h"
 
-Deploii::Deploii(const char *mcuID) {
-   _mcuID = mcuID;
+Deploii::Deploii(char* boardID, Medium medium, Protocol protocol) {
+   _boardID = boardID;
+   _medium = medium;
+   _protocol = protocol;
+   _handler = selectHandler();
 }
 
-void Deploii::connect_wifi(char *ssid, const char *password) {
+Deploii::~Deploii() {
+   delete _handler;
+}
 
-   Serial.begin(9600);
-   WiFi.begin(ssid, password);
-   while (WiFi.status() != WL_CONNECTED)
-      delay(1000);
+void Deploii::send() {
+}
 
-   Serial.println("Wifi connected");
+void Deploii::connect() {
+   _handler->connect();
+}
 
-   _ws.begin(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_URL);
-   _ws.onEvent(nullptr);
-   _ws.setAuthorization(_mcuID, "");
-   _ws.setReconnectInterval(5000);
-   _connectedWiFi = true;
+void Deploii::connect(const char* ssid,
+                      const char* pwd,
+                      const char* host,
+                      const int port,
+                      const char* url,
+                      bool ssl) {
+   _handler->connect(_boardID, ssid, pwd, host, port, url, ssl);
 }
 
 void Deploii::loop() {
-   if (_connectedWiFi) {
-      _ws.loop();
-   }
+   _handler->loop();
+}
+
+DeploiiHandler* Deploii::selectHandler() {
+   if (_medium == Medium::WiFi && _protocol == Protocol::WebSockets) return new DeploiiHandlerWiFiWS();
+
+   return new DeploiiHandler();
 }
