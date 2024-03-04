@@ -1,10 +1,9 @@
 #include <deploii.h>
 
-Deploii oi("BOARD ID");
+Deploii oi("BOARD-ID", Medium::WiFi, Protocol::WebSockets);
 
 void setup() {
-   Serial.begin(9600);
-   oi.connect_wifi("SSID", "PASSWORD");
+   oi.connect("WiFi-SSID", "WiFi-PASSWORD");
 }
 
 void loop() {
