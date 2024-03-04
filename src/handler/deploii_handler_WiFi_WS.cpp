@@ -26,8 +26,6 @@ void DeploiiHandlerWiFiWS::connect(
    WiFi.begin(ssid, pwd);
    while (WiFi.status() != WL_CONNECTED) delay(1000);
 
-   //_ws.setAuthorization(boardID);
-
    char authHeader[40];
    sprintf(authHeader, "%s%s", "Authorization: ", boardID);
    _ws.setExtraHeaders(authHeader);
