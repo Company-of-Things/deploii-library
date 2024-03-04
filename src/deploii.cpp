@@ -1,10 +1,9 @@
 #include "deploii.h"
 
-Deploii::Deploii(char* boardID, Medium medium, Protocol protocol) {
-   _boardID = boardID;
-   _medium = medium;
-   _protocol = protocol;
-   _handler = selectHandler();
+Deploii::Deploii(char* boardID, Medium medium, Protocol protocol) : _boardID(boardID),
+                                                                    _medium(medium),
+                                                                    _protocol(protocol),
+                                                                    _handler(selectHandler()) {
 }
 
 Deploii::~Deploii() {
