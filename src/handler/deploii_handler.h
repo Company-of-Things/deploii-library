@@ -20,7 +20,7 @@ class DeploiiHandler {
    virtual void loop();
    virtual void connect();
    virtual void connect(char* boardID,
-                        const char* ssid,
+                        char* ssid,
                         const char* pwd,
                         const char* host = Deploii_HOST,
                         const int port = Deploii_PORT,
@@ -37,7 +37,7 @@ class DeploiiHandlerWiFiWS : public DeploiiHandler {
    virtual void send();
    virtual void loop();
    virtual void connect(char* boardID,
-                        const char* ssid,
+                        char* ssid,
                         const char* pwd,
                         const char* host,
                         const int port,

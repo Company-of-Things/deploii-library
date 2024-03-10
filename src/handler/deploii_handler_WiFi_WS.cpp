@@ -12,7 +12,7 @@
 /*
    Helper function declarations
 */
-void connectWiFi(const char* ssid, const char* pwd);
+void connectWiFi(char* ssid, const char* pwd);
 
 /*
    Class definitions
@@ -30,7 +30,7 @@ void DeploiiHandlerWiFiWS::loop() {
 
 void DeploiiHandlerWiFiWS::connect(
     char* boardID,
-    const char* ssid,
+    char* ssid,
     const char* pwd,
     const char* host,
     const int port,
@@ -54,7 +54,7 @@ void DeploiiHandlerWiFiWS::connect(
 
 #ifdef ESP32
 
-void connectWiFi(const char* ssid, const char* pwd) {
+void connectWiFi(char* ssid, const char* pwd) {
    WiFi.mode(WIFI_STA);
    WiFi.begin(ssid, pwd);
    while (WiFi.status() != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
@@ -64,8 +64,8 @@ void connectWiFi(const char* ssid, const char* pwd) {
 
 #ifdef ARDUINO
 
-void connectWiFi(const char* ssid, const char* pwd) {
-   while (WiFi.begin(ssid, pwd) != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
+void connectWiFi(char* ssid, const char* pwd) {
+   while (WiFi.begin(SSID, pwd) != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
 }
 
 #endif
