@@ -25,7 +25,7 @@ class Deploii {
    void send();
    void loop();
    void connect();
-   void connect(const char* ssid,
+   void connect(char* ssid,
                 const char* pwd,
                 const char* host = Deploii_HOST,
                 const int port = Deploii_PORT,

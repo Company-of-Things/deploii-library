@@ -67,6 +67,6 @@ void connectWiFi(char* ssid, const char* pwd) {
 }
 
 #else
-void connectWiFi(const char* ssid, const char* pwd) {}
+void connectWiFi(char* ssid, const char* pwd) {}
 
 #endif
