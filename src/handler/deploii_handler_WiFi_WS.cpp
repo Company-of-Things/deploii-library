@@ -52,7 +52,7 @@ void DeploiiHandlerWiFiWS::connect(
    Helper function definitions
 */
 
-#ifdef ESP32
+#if defined(ESP32)
 
 void connectWiFi(char* ssid, const char* pwd) {
    WiFi.mode(WIFI_STA);
@@ -60,12 +60,13 @@ void connectWiFi(char* ssid, const char* pwd) {
    while (WiFi.status() != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
 }
 
-#endif
-
-#ifdef ARDUINO
+#elif defined(ARDUINO)
 
 void connectWiFi(char* ssid, const char* pwd) {
    while (WiFi.begin(SSID, pwd) != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
 }
+
+#else
+void connectWiFi(const char* ssid, const char* pwd) {}
 
 #endif
