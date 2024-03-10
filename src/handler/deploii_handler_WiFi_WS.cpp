@@ -1,7 +1,21 @@
 #include "deploii_handler.h"
 
 /*
-    Deploii handler for communication using WiFI and WebSockets
+   Deploii handler for communication using WiFI and WebSockets
+*/
+
+/*
+   Constants
+*/
+#define Deploii_WIFI_RECONNECT_TIME 1000
+
+/*
+   Helper function declarations
+*/
+void connectWiFi(const char* ssid, const char* pwd);
+
+/*
+   Class definitions
 */
 
 DeploiiHandlerWiFiWS::DeploiiHandlerWiFiWS() : _ws() {
@@ -22,9 +36,7 @@ void DeploiiHandlerWiFiWS::connect(
     const int port,
     const char* url,
     bool ssl) {
-   WiFi.mode(WIFI_STA);
-   WiFi.begin(ssid, pwd);
-   while (WiFi.status() != WL_CONNECTED) delay(1000);
+   connectWiFi(ssid, pwd);
 
    char authHeader[40];
    sprintf(authHeader, "%s%s", "Authorization: ", boardID);
@@ -35,3 +47,25 @@ void DeploiiHandlerWiFiWS::connect(
    else
       _ws.begin(host, port, url);
 }
+
+/*
+   Helper function definitions
+*/
+
+#ifdef ESP32
+
+void connectWiFi(const char* ssid, const char* pwd) {
+   WiFi.mode(WIFI_STA);
+   WiFi.begin(ssid, pwd);
+   while (WiFi.status() != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
+}
+
+#endif
+
+#ifdef ARDUINO
+
+void connectWiFi(const char* ssid, const char* pwd) {
+   while (WiFi.begin(ssid, pwd) != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
+}
+
+#endif
