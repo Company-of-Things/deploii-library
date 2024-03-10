@@ -63,7 +63,7 @@ void connectWiFi(char* ssid, const char* pwd) {
 #elif defined(ARDUINO)
 
 void connectWiFi(char* ssid, const char* pwd) {
-   while (WiFi.begin(SSID, pwd) != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
+   while (WiFi.begin(ssid, pwd) != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
 }
 
 #else
