@@ -13,6 +13,7 @@
    Helper function declarations
 */
 void connectWiFi(char* ssid, const char* pwd);
+void connectWS(WebSocketsClient ws, char* boardID, const char* host, const int port, const char* url, bool ssl);
 void connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl);
 
 /*
@@ -38,7 +39,7 @@ void DeploiiHandlerWiFiWS::connect(
     const char* url,
     bool ssl) {
    connectWiFi(ssid, pwd);
-   connectWS(boardID, host, port, url, ssl);
+   connectWS(_ws, boardID, host, port, url, ssl);
 }
 
 /*
@@ -53,15 +54,15 @@ void connectWiFi(char* ssid, const char* pwd) {
    while (WiFi.status() != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
 }
 
-void connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl) {
+void connectWS(WebSocketsClient ws, char* boardID, const char* host, const int port, const char* url, bool ssl) {
    char authHeader[40];
    sprintf(authHeader, "%s%s", "Authorization: ", boardID);
-   _ws.setExtraHeaders(authHeader);
+   ws.setExtraHeaders(authHeader);
 
    if (ssl)
-      _ws.beginSSL(host, port, url);
+      ws.beginSSL(host, port, url);
    else
-      _ws.begin(host, port, url);
+      ws.begin(host, port, url);
 }
 
 #elif defined(ARDUINO)
@@ -70,13 +71,13 @@ void connectWiFi(char* ssid, const char* pwd) {
    while (WiFi.begin(ssid, pwd) != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
 }
 
-void connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl) {
+void connectWS(WebSocketsClient ws, char* boardID, const char* host, const int port, const char* url, bool ssl) {
 }
 
 #else
 void connectWiFi(char* ssid, const char* pwd) {}
 
-void connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl) {
+void connectWS(WebSocketsClient ws, char* boardID, const char* host, const int port, const char* url, bool ssl) {
 }
 
 #endif
