@@ -26,7 +26,7 @@ DeploiiHandlerWiFiWS::DeploiiHandlerWiFiWS()
 {
 }
 
-DeploiiHandlerWiFiWS::~DeploiiHandlerWiFiWS() : {
+DeploiiHandlerWiFiWS::~DeploiiHandlerWiFiWS() {
 #if defined(ESP32)
    delete _ws;
 #elif defined(ARDUINO)
