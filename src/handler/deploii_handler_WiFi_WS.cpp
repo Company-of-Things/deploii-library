@@ -17,9 +17,9 @@
    Public methods
 */
 
-DeploiiHandlerWiFiWS::DeploiiHandlerWiFiWS() :
+DeploiiHandlerWiFiWS::DeploiiHandlerWiFiWS()
 #if defined(ESP32)
-                                               _ws()
+    : _ws()
 #elif defined(ARDUINO)
 #else
 #endif
