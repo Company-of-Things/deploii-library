@@ -34,6 +34,7 @@ class DeploiiHandler {
 class DeploiiHandlerWiFiWS : public DeploiiHandler {
  public:
    DeploiiHandlerWiFiWS();
+   ~DeploiiHandlerWiFiWS();
 
    virtual void send();
    virtual void loop();
