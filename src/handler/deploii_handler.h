@@ -15,6 +15,7 @@
 class DeploiiHandler {
  public:
    DeploiiHandler();
+   ~DeploiiHandler();
 
    virtual void send();
    virtual void loop();

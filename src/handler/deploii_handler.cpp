@@ -1,6 +1,7 @@
 #include "deploii_handler.h"
 
 DeploiiHandler::DeploiiHandler() {}
+DeploiiHandler::~DeploiiHandler() {}
 
 void DeploiiHandler::send() {}
 void DeploiiHandler::loop() {}
