@@ -61,3 +61,5 @@ class DeploiiHandlerWiFiWS : public DeploiiHandler {
 
 #endif
 };
+
+#endif
