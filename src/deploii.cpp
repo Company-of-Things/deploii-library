@@ -17,7 +17,7 @@ void Deploii::connect() {
    _handler->connect();
 }
 
-void Deploii::connect(const char* ssid,
+void Deploii::connect(char* ssid,
                       const char* pwd,
                       const char* host,
                       const int port,
