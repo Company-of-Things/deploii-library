@@ -28,7 +28,7 @@ DeploiiHandlerWiFiWS::DeploiiHandlerWiFiWS()
 
 DeploiiHandlerWiFiWS::~DeploiiHandlerWiFiWS() {
 #if defined(ESP32)
-   delete _ws;
+   _ws.~WebSocketsClient();
 #elif defined(ARDUINO)
 #else
 #endif
