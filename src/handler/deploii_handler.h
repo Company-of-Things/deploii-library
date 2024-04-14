@@ -46,17 +46,16 @@ class DeploiiHandlerWiFiWS : public DeploiiHandler {
                         bool ssl);
 
  private:
-   /*
-     Board specific private members
-   */
    void connectWiFi(char* ssid, const char* pwd);
    void connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl);
 
+   /*
+     Board specific private members
+   */
 #if defined(ESP32)
    WebSocketsClient _ws;
 
 #elif defined(ARDUINO)
-
 #else
 
 #endif
