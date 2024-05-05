@@ -17,11 +17,14 @@
    Public methods
 */
 
-DeploiiHandlerWiFiWS::DeploiiHandlerWiFiWS()
+DeploiiHandlerWiFiWS::DeploiiHandlerWiFiWS(bool debug)
 #if defined(ESP32)
-    : _ws()
+
+    : _ws(), _debug(debug)
 #elif defined(ARDUINO)
+    : _debug(debug)
 #else
+    : _debug(debug)
 #endif
 {
 }
@@ -66,7 +69,15 @@ void DeploiiHandlerWiFiWS::connect(
 void DeploiiHandlerWiFiWS::connectWiFi(char* ssid, const char* pwd) {
    WiFi.mode(WIFI_STA);
    WiFi.begin(ssid, pwd);
-   while (WiFi.status() != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
+   while (WiFi.status() != WL_CONNECTED) {
+      delay(Deploii_WIFI_RECONNECT_TIME);
+if (_debug) {
+         Serial.println("Connecting to WiFi");
+}
+      }
+   if (_debug) {
+      Serial.println("WiFi connected");
+   }
 }
 
 void DeploiiHandlerWiFiWS::connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl) {
@@ -78,6 +89,9 @@ void DeploiiHandlerWiFiWS::connectWS(char* boardID, const char* host, const int 
       _ws.beginSSL(host, port, url);
    else
       _ws.begin(host, port, url);
+if (_debug) {
+      Serial.println("WS connected");
+   }
 }
 
 #elif defined(ARDUINO)

@@ -19,7 +19,7 @@ enum class Protocol {
 
 class Deploii {
  public:
-   Deploii(char* boardID, Medium medium, Protocol protocol);
+   Deploii(char* boardID, Medium medium, Protocol protocol, bool debug = false);
    ~Deploii();
 
    void send();
@@ -35,6 +35,7 @@ class Deploii {
  private:
    Medium _medium;
    Protocol _protocol;
+   bool _debug;
    char* _boardID;
    DeploiiHandler* _handler;
    DeploiiHandler* selectHandler();

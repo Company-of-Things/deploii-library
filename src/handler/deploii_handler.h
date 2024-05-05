@@ -14,7 +14,7 @@
 
 class DeploiiHandler {
  public:
-   DeploiiHandler();
+   DeploiiHandler(bool debug = false);
    ~DeploiiHandler();
 
    virtual void send();
@@ -29,11 +29,12 @@ class DeploiiHandler {
                         bool ssl = true);
 
  private:
+bool _debug;
 };
 
 class DeploiiHandlerWiFiWS : public DeploiiHandler {
  public:
-   DeploiiHandlerWiFiWS();
+   DeploiiHandlerWiFiWS(bool debug = false);
    ~DeploiiHandlerWiFiWS();
 
    virtual void send();
@@ -47,6 +48,8 @@ class DeploiiHandlerWiFiWS : public DeploiiHandler {
                         bool ssl);
 
  private:
+bool _debug;
+
    void connectWiFi(char* ssid, const char* pwd);
    void connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl);
 

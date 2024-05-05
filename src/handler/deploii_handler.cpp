@@ -1,6 +1,6 @@
 #include "deploii_handler.h"
 
-DeploiiHandler::DeploiiHandler() {}
+DeploiiHandler::DeploiiHandler(bool debug) : _debug(debug) {}
 DeploiiHandler::~DeploiiHandler() {}
 
 void DeploiiHandler::send() {}

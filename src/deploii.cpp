@@ -1,8 +1,9 @@
 #include "deploii.h"
 
-Deploii::Deploii(char* boardID, Medium medium, Protocol protocol) : _boardID(boardID),
+Deploii::Deploii(char* boardID, Medium medium, Protocol protocol, bool debug) : _boardID(boardID),
                                                                     _medium(medium),
                                                                     _protocol(protocol),
+                                                                                _debug(debug),
                                                                     _handler(selectHandler()) {
 }
 
@@ -31,7 +32,7 @@ void Deploii::loop() {
 }
 
 DeploiiHandler* Deploii::selectHandler() {
-   if (_medium == Medium::WiFi && _protocol == Protocol::WebSockets) return new DeploiiHandlerWiFiWS();
+   if (_medium == Medium::WiFi && _protocol == Protocol::WebSockets) return new DeploiiHandlerWiFiWS(_debug);
 
-   return new DeploiiHandler();
+   return new DeploiiHandler(_debug);
 }
