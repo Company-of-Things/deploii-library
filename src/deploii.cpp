@@ -1,17 +1,14 @@
 #include "deploii.h"
 
 Deploii::Deploii(char* boardID, Medium medium, Protocol protocol, bool debug) : _boardID(boardID),
-                                                                    _medium(medium),
-                                                                    _protocol(protocol),
+                                                                                _medium(medium),
+                                                                                _protocol(protocol),
                                                                                 _debug(debug),
-                                                                    _handler(selectHandler()) {
+                                                                                _handler(selectHandler()) {
 }
 
 Deploii::~Deploii() {
    delete _handler;
-}
-
-void Deploii::send() {
 }
 
 void Deploii::connect() {

@@ -17,7 +17,7 @@ class DeploiiHandler {
    DeploiiHandler(bool debug = false);
    ~DeploiiHandler();
 
-   virtual void send();
+   virtual void send(const uint8_t* data, size_t size);
    virtual void loop();
    virtual void connect();
    virtual void connect(char* boardID,
@@ -29,7 +29,7 @@ class DeploiiHandler {
                         bool ssl = true);
 
  private:
-bool _debug;
+   bool _debug;
 };
 
 class DeploiiHandlerWiFiWS : public DeploiiHandler {
@@ -37,7 +37,7 @@ class DeploiiHandlerWiFiWS : public DeploiiHandler {
    DeploiiHandlerWiFiWS(bool debug = false);
    ~DeploiiHandlerWiFiWS();
 
-   virtual void send();
+   virtual void send(const uint8_t* data, size_t size);
    virtual void loop();
    virtual void connect(char* boardID,
                         char* ssid,
@@ -48,7 +48,7 @@ class DeploiiHandlerWiFiWS : public DeploiiHandler {
                         bool ssl);
 
  private:
-bool _debug;
+   bool _debug;
 
    void connectWiFi(char* ssid, const char* pwd);
    void connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl);

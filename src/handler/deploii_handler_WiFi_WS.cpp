@@ -37,7 +37,20 @@ DeploiiHandlerWiFiWS::~DeploiiHandlerWiFiWS() {
 #endif
 }
 
-void DeploiiHandlerWiFiWS::send() {
+void DeploiiHandlerWiFiWS::send(const uint8_t* data, size_t size) {
+#if defined(ESP32)
+   _ws.sendBIN(data, size);
+   if (_debug) {
+      Serial.println("Sending");
+      for (auto i = 0; i < size; i++) {
+         Serial.print(data[i], HEX);
+         Serial.print(" ");
+      }
+      Serial.println();
+   }
+#elif defined(ARDUINO)
+#else
+#endif
 }
 
 void DeploiiHandlerWiFiWS::loop() {
@@ -71,10 +84,10 @@ void DeploiiHandlerWiFiWS::connectWiFi(char* ssid, const char* pwd) {
    WiFi.begin(ssid, pwd);
    while (WiFi.status() != WL_CONNECTED) {
       delay(Deploii_WIFI_RECONNECT_TIME);
-if (_debug) {
+      if (_debug) {
          Serial.println("Connecting to WiFi");
-}
       }
+   }
    if (_debug) {
       Serial.println("WiFi connected");
    }
@@ -89,7 +102,7 @@ void DeploiiHandlerWiFiWS::connectWS(char* boardID, const char* host, const int 
       _ws.beginSSL(host, port, url);
    else
       _ws.begin(host, port, url);
-if (_debug) {
+   if (_debug) {
       Serial.println("WS connected");
    }
 }

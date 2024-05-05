@@ -4,6 +4,8 @@
 #include "Arduino.h"
 #include "./handler/deploii_handler.h"
 
+#include <MsgPack.h>
+
 enum class Medium {
    None,
    WiFi,
@@ -22,7 +24,12 @@ class Deploii {
    Deploii(char* boardID, Medium medium, Protocol protocol, bool debug = false);
    ~Deploii();
 
-   void send();
+   template <typename T, size_t length>
+   void send(MsgPack::str_t dataStreamID, const T (&data)[length]);
+
+   template <typename T>
+   void send(MsgPack::str_t dataStreamID, T data);
+
    void loop();
    void connect();
    void connect(char* ssid,
@@ -40,5 +47,7 @@ class Deploii {
    DeploiiHandler* _handler;
    DeploiiHandler* selectHandler();
 };
+
+#include "deploii.tpp"
 
 #endif

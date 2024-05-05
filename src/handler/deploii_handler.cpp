@@ -3,7 +3,7 @@
 DeploiiHandler::DeploiiHandler(bool debug) : _debug(debug) {}
 DeploiiHandler::~DeploiiHandler() {}
 
-void DeploiiHandler::send() {}
+void DeploiiHandler::send(const uint8_t* data, size_t size) {}
 void DeploiiHandler::loop() {}
 void DeploiiHandler::connect() {}
 void DeploiiHandler::connect(char* boardID,
