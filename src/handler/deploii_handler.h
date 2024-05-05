@@ -1,14 +1,6 @@
 #ifndef Deploii_handler_h
 #define Deploii_handler_h
 
-/*
-    Constants for connection
-*/
-
-#define Deploii_HOST "deploii.no"
-#define Deploii_PORT 443
-#define Deploii_WS_URL "/ws"
-
 #include <WiFi.h>
 #include <WebSocketsClient.h>
 
