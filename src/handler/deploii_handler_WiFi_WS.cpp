@@ -8,6 +8,7 @@
    Constants
 */
 #define Deploii_WIFI_RECONNECT_TIME 1000
+#define DEPLOII_WS_RECONNECT_TIME 1000
 
 /*
    Class definitions
@@ -97,11 +98,16 @@ void DeploiiHandlerWiFiWS::connectWS(char* boardID, const char* host, const int 
    char authHeader[40];
    sprintf(authHeader, "%s%s", "Authorization: ", boardID);
    _ws.setExtraHeaders(authHeader);
-
-   if (ssl)
-      _ws.beginSSL(host, port, url);
-   else
-      _ws.begin(host, port, url);
+   while (!_ws.isConnected()) {
+      if (ssl)
+         _ws.beginSSL(host, port, url);
+      else
+         _ws.begin(host, port, url);
+      if (_debug) {
+         Serial.println("Connecting to WS");
+      }
+      delay(DEPLOII_WS_RECONNECT_TIME);
+   }
    if (_debug) {
       Serial.println("WS connected");
    }
