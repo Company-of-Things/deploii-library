@@ -6,14 +6,6 @@
 
 #include <MsgPack.h>
 
-/*
-    Constants for connection
-*/
-
-#define Deploii_HOST "deploii.no"
-#define Deploii_PORT 443
-#define Deploii_WS_URL "/ws"
-
 enum class Medium {
    None,
    WiFi,

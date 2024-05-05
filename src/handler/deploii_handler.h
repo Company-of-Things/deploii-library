@@ -4,6 +4,14 @@
 #include <WiFi.h>
 #include <WebSocketsClient.h>
 
+/*
+    Constants for connection
+*/
+
+#define Deploii_HOST "deploii.no"
+#define Deploii_PORT 443
+#define Deploii_WS_URL "/ws"
+
 class DeploiiHandler {
  public:
    DeploiiHandler(bool debug = false);
