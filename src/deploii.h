@@ -19,6 +19,12 @@ enum class Protocol {
    MQTT
 };
 
+struct Interval {
+   int intervalLength;
+   int previousTime;
+   void (*cb)(void);
+};
+
 class Deploii {
  public:
    Deploii(char* boardID, Medium medium, Protocol protocol, bool debug = false);
@@ -39,6 +45,8 @@ class Deploii {
                 const char* url = Deploii_WS_URL,
                 bool ssl = true);
 
+   void interval(int intervalLength, void (*cb)(void));
+
  private:
    Medium _medium;
    Protocol _protocol;
@@ -46,6 +54,10 @@ class Deploii {
    char* _boardID;
    DeploiiHandler* _handler;
    DeploiiHandler* selectHandler();
+
+   void checkIntervals();
+   struct Interval* _intervals;
+   int _intervalCount;
 };
 
 #include "deploii.tpp"
