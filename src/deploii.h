@@ -2,9 +2,8 @@
 #define Deploii_h
 
 #include "Arduino.h"
-#include "./handler/deploii_handler.h"
-
 #include <MsgPack.h>
+#include "./handler/deploii_handler.h"
 
 enum class Medium {
    None,
