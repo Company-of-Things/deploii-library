@@ -8,7 +8,7 @@
    Constants
 */
 #define Deploii_WIFI_RECONNECT_TIME 1000
-#define DEPLOII_WS_RECONNECT_TIME 1000
+#define DEPLOII_WS_RECONNECT_TIME 2000
 
 /*
    Class definitions
@@ -81,6 +81,7 @@ void DeploiiHandlerWiFiWS::connect(
 #if defined(ESP32)
 
 void DeploiiHandlerWiFiWS::connectWiFi(char* ssid, const char* pwd) {
+   if (_debug) Serial.println("Connecting to WiFi");
    WiFi.mode(WIFI_STA);
    WiFi.begin(ssid, pwd);
    while (WiFi.status() != WL_CONNECTED) {
@@ -91,23 +92,19 @@ void DeploiiHandlerWiFiWS::connectWiFi(char* ssid, const char* pwd) {
    }
    if (_debug) {
       Serial.println("WiFi connected");
+      Serial.println(WiFi.localIP());
    }
+   if (_debug) Serial.println(WiFi.localIP());
 }
 
 void DeploiiHandlerWiFiWS::connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl) {
-   char authHeader[40];
+   char authHeader[60];
    sprintf(authHeader, "%s%s", "Authorization: ", boardID);
    _ws.setExtraHeaders(authHeader);
-   while (!_ws.isConnected()) {
-      if (ssl)
-         _ws.beginSSL(host, port, url);
-      else
-         _ws.begin(host, port, url);
-      if (_debug) {
-         Serial.println("Connecting to WS");
-      }
-      delay(DEPLOII_WS_RECONNECT_TIME);
-   }
+   if (ssl)
+      _ws.beginSSL(host, port, url);
+   else
+      _ws.begin(host, port, url);
    if (_debug) {
       Serial.println("WS connected");
    }
