@@ -47,8 +47,8 @@ void Deploii::interval(int intervalLength, void (*cb)(void)) {
 }
 
 void Deploii::checkIntervals() {
-   unsigned long currentTime = millis();
    for (int i = 0; i < _intervalCount; i++) {
+      unsigned long currentTime = millis();
       if (currentTime >= _intervals[i].previousTime + _intervals[i].intervalLength) {
          _intervals[i].cb();
          _intervals[i].previousTime = currentTime;
