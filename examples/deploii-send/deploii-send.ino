@@ -12,5 +12,4 @@ void setup() {
 void loop() {
    oi.send("DataStream ID", myData);
    oi.send("DataStream ID", myDataArray);
-   delay(1000);
 }
