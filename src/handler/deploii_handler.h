@@ -1,7 +1,7 @@
 #ifndef Deploii_handler_h
 #define Deploii_handler_h
 
-#ifdef ESP32
+#if defined(ESP32)
 #include <WiFi.h>
 #include <WebSocketsClient.h>
 #endif
