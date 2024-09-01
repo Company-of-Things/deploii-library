@@ -1,8 +1,11 @@
 #ifndef Deploii_handler_h
 #define Deploii_handler_h
 
+#include "Arduino.h"
 #include <WiFi.h>
+#if defined(ESP32)
 #include <WebSocketsClient.h>
+#endif
 
 /*
     Constants for connection
