@@ -13,7 +13,7 @@ env:
     - name: MsgPack
 
 jobs:
-  lint:
+  arduino-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
