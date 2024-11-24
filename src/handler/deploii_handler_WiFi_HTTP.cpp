@@ -57,7 +57,7 @@ void DeploiiHandlerWiFiHTTP::connectWiFi(char* ssid, const char* pwd) {
    WiFi.mode(WIFI_STA);
    WiFi.begin(ssid, pwd);
    while (WiFi.status() != WL_CONNECTED) {
-      delay(Deploii_WIFI_RECONNECT_TIME);
+      delay(DEPLOII_WIFI_RECONNECT_TIME);
       if (_debug) {
          Serial.println("Connecting to WiFi");
       }
@@ -71,7 +71,7 @@ void DeploiiHandlerWiFiHTTP::connectWiFi(char* ssid, const char* pwd) {
 #elif defined(ARDUINO)
 
 void DeploiiHandlerWiFiHTTP::connectWiFi(char* ssid, const char* pwd) {
-   while (WiFi.begin(ssid, pwd) != WL_CONNECTED) delay(Deploii_WIFI_RECONNECT_TIME);
+   while (WiFi.begin(ssid, pwd) != WL_CONNECTED) delay(DEPLOII_WIFI_RECONNECT_TIME);
 }
 #else
 void DeploiiHandlerWiFiHTTP::connectWiFi(char* ssid, const char* pwd) {}
