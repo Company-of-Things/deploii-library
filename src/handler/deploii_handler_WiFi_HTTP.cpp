@@ -27,19 +27,27 @@ void DeploiiHandlerWiFiHTTP::connect(
     const char* url,
     bool ssl) {
    connectWiFi(ssid, pwd);
+#if defined(ESP32)
    if (ssl)
       _http.begin(host, port, url, buypass_cert);
    else
       _http.begin(host, port, url);
 
    _http.addHeader("Authorization", boardID, false, false);
+#elif defined(ARDUINO)
+#else
+#endif
 }
 
 void DeploiiHandlerWiFiHTTP::loop() {
 }
 
 void DeploiiHandlerWiFiHTTP::send(const uint8_t* data, size_t size) {
+#if defined(ESP32)
    _http.POST((uint8_t*)data, size);
+#elif defined(ARDUINO)
+#else
+#endif
 }
 
 #if defined(ESP32)
