@@ -34,6 +34,7 @@ void Deploii::loop() {
 
 DeploiiHandler* Deploii::selectHandler() {
    if (_medium == Medium::WiFi && _protocol == Protocol::WebSockets) return new DeploiiHandlerWiFiWS(_debug);
+   if (_medium == Medium::WiFi && _protocol == Protocol::HTTP) return new DeploiiHandlerWiFiHTTP(_debug);
 
    return new DeploiiHandler(_debug);
 }

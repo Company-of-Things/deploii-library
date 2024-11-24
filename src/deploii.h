@@ -1,5 +1,5 @@
-#ifndef Deploii_h
-#define Deploii_h
+#ifndef DEPLOII_h
+#define DEPLOII_h
 
 #include "Arduino.h"
 #include <MsgPack.h>
@@ -39,9 +39,9 @@ class Deploii {
    void connect();
    void connect(char* ssid,
                 const char* pwd,
-                const char* host = Deploii_HOST,
-                const int port = Deploii_PORT,
-                const char* url = Deploii_WS_URL,
+                const char* host = DEPLOII_HOST,
+                const int port = DEPLOII_PORT,
+                const char* url = DEPLOII_WS_URL,
                 bool ssl = true);
 
    void interval(int intervalLength, void (*cb)(void));
