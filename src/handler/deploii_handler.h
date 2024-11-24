@@ -16,7 +16,8 @@
 
 #define Deploii_HOST "deploii.no"
 #define Deploii_PORT 443
-#define Deploii_WS_URL "/ws"
+#define Deploii_WS_URL "/mcu/ws"
+#define Deploii_HTTP_URL "/mcu/data"
 
 #define Deploii_WIFI_RECONNECT_TIME 1000
 #define DEPLOII_WS_RECONNECT_TIME 2000
