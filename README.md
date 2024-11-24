@@ -6,5 +6,5 @@ Currently supports:
 
 |              | WiFi/WebSockets  | WiFi/HTTP |
 |--------------|------------------|-----------|
-| ESP32        |        ✅       |    ❌     |          
+| ESP32        |        ✅       |    ✅     |          
 | Arduino WiFi |        ❌       |    ❌     |
