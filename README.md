@@ -36,11 +36,11 @@ Now you can send data using the send function and providing a data stream ID and
 ```c++
 oi.send("Data stream ID", data);
 ```
-If you want to do repeated tasks such as sending data at a set interval, you can use the interval function. You call the interval function in setup to register an interval. The function takes an interval specified in ms and a function to be executed at that interval. 
+If you want to do repeated tasks such as sending data at a set interval, you can use the interval function. You call the interval function in setup to register an interval. The function takes an interval specified in milliseconds and a function to be executed at that interval. 
 ```c++
 oi.interval(1000, myFunction);
 ```
-For protocols that maintain a persistent connection, such as the WebSocket protocol, or when using intervals it is required that you call the deploii loop function inside of the arduino void loop. You also cannot use delays or other stopping code when using these protocols as they might break the connection.
+For protocols that maintain a persistent connection, such as the WebSocket protocol or when using intervals, it is required that you call the Deploii loop function inside of the arduino void loop. You also cannot use delays or other blocking code when using these protocols as they might break the connection.
 ```c++
 void loop(){
   oi.loop();
