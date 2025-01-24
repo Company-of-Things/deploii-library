@@ -37,9 +37,8 @@ class DeploiiHandler {
                         const int port = DEPLOII_PORT,
                         const char* url = DEPLOII_WS_URL,
                         bool ssl = true);
-
- private:
    bool _debug;
+ private:
 };
 
 class DeploiiHandlerWiFiWS : public DeploiiHandler {
@@ -56,9 +55,9 @@ class DeploiiHandlerWiFiWS : public DeploiiHandler {
                         const int port,
                         const char* url,
                         bool ssl);
-
- private:
    bool _debug;
+ private:
+  
 
    void connectWiFi(char* ssid, const char* pwd);
    void connectWS(char* boardID, const char* host, const int port, const char* url, bool ssl);
@@ -89,9 +88,8 @@ class DeploiiHandlerWiFiHTTP : public DeploiiHandler {
                         const int port,
                         const char* url,
                         bool ssl);
-
- private:
    bool _debug;
+ private:
    void connectWiFi(char* ssid, const char* pwd);
 
 #if defined(ESP32)

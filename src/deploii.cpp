@@ -39,6 +39,11 @@ DeploiiHandler* Deploii::selectHandler() {
    return new DeploiiHandler(_debug);
 }
 
+void Deploii::setDebug(bool debug){
+  _debug = debug;
+  _handler->_debug = debug;
+}
+
 void Deploii::interval(int intervalLength, void (*cb)(void)) {
    _intervals = (struct Interval*)realloc(_intervals, sizeof(struct Interval) * (_intervalCount + 1));
    _intervals[_intervalCount].intervalLength = intervalLength;

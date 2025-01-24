@@ -45,6 +45,7 @@ class Deploii {
                 bool ssl = true);
 
    void interval(int intervalLength, void (*cb)(void));
+   void setDebug(bool debug);
 
  private:
    Medium _medium;
