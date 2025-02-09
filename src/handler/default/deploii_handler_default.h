@@ -6,15 +6,15 @@
 
 class DeploiiHandler {
  public:
-   DeploiiHandler();
+   DeploiiHandler(char* boardID);
    ~DeploiiHandler();
 
-   void send(const uint8_t* data, size_t size) {}
+   void send(const uint8_t* data, size_t size);
 
    template <typename... Args>
-   void connect(Args&&... args) {}
+   void connect(Args&&... args);
 
-   void loop() {}
+   void loop();
 };
 
 #endif

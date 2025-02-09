@@ -1,9 +1,6 @@
 #ifndef DEPLOII_HANDLER_h
 #define DEPLOII_HANDLER_h
 
-#include "Arduino.h"
-#include "deploii_constants.h"
-
 #if defined(ESP32)
 #include "./esp32/deploii_handler_esp32.h"
 #else
