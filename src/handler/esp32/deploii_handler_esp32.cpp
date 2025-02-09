@@ -40,8 +40,16 @@ void DeploiiHandler::connect(char* boardID, const char* ssid, const char* pwd) {
 
 void DeploiiHandler::send(const uint8_t* data, size_t size) {
 #if Deploii_protocol == Deploii_WebSockets
-
+   _ws.sendBIN(data, size);
 #elif Deploii_protocol == Deploii_HTTP
    _http.POST((uint8_t*)data, size);
+#endif  // Deploii_protocol
+}
+
+void DeploiiHandler::loop() {
+#if Deploii_protocol == Deploii_WebSockets
+   _ws.loop();
+#elif Deploii_protocol == Deploii_HTTP
+
 #endif  // Deploii_protocol
 }
