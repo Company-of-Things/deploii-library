@@ -19,9 +19,6 @@ void Deploii::send(MsgPack::str_t dataStreamID, const T (&data)[length]) {
    memcpy(&msg.data, data, sizeof(T) * length);
 
    packer.serialize(msg);
-   if (_debug) {
-      Serial.println("Sending array");
-   }
    _handler->send(packer.data(), packer.size());
 }
 
@@ -43,8 +40,11 @@ void Deploii::send(MsgPack::str_t dataStreamID, T data) {
    msg.data = data;
 
    packer.serialize(msg);
-   if (_debug) {
-      Serial.println("Sending single value");
-   }
    _handler->send(packer.data(), packer.size());
+}
+
+// Forwards any arguments through the connect function into the corresponding overload at the handler
+template <typename... Args>
+void connect(Args&&... args) {
+   _handler->connect(_boardID, std::forward<Args>(args)...);
 }
