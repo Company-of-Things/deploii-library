@@ -2,21 +2,34 @@
 #define DEPLOII_h
 
 #include "Arduino.h"
+#include <utility>
 #include <MsgPack.h>
-#include "./handler/deploii_handler.h"
 
-enum class Medium {
+#define DEPLOII_MAX_INTERVALS 10
+
+enum Medium {
    None,
    WiFi,
    NarrowBand
 };
 
-enum class Protocol {
+enum Protocol {
    None,
    WebSockets,
    HTTP,
    MQTT
 };
+#ifndef Deploii_medium
+#define Deploii_medium None
+#endif  // !Deploii_medium
+#ifndef Deploii_protocol
+#define Deploii_protocol None
+#endif  // !Deploii_protocol
+#ifndef Deploii_debug
+#define Deploii_debug 0
+#endif  // !Deploii_debug
+#define Deploii_debug_interface Serial
+#include "./handler/deploii_handler.h"
 
 struct Interval {
    int intervalLength;
@@ -26,39 +39,31 @@ struct Interval {
 
 class Deploii {
  public:
-   Deploii(char* boardID, Medium medium, Protocol protocol, bool debug = false);
+   constexpr Deploii(const char* boardID);
    ~Deploii();
 
    template <typename T, size_t length>
-   void send(MsgPack::str_t dataStreamID, const T (&data)[length]);
+   void send(MsgPack::str_t dataStreamID, const T (&data)[length]) const;
 
    template <typename T>
-   void send(MsgPack::str_t dataStreamID, T data);
+   void send(MsgPack::str_t dataStreamID, T data) const;
 
-   void loop();
-   void connect();
-   void connect(char* ssid,
-                const char* pwd,
-                const char* host = DEPLOII_HOST,
-                const int port = DEPLOII_PORT,
-                const char* url = DEPLOII_WS_URL,
-                bool ssl = true);
+   template <typename... Args>
+   void connect(Args&&... args) const {
+      _handler->connect(std::forward<Args>(args)...);
+   }
 
-   void interval(int intervalLength, void (*cb)(void));
-   void setDebug(bool debug);
+   void loop() const;
+   void interval(int intervalLength, void (*cb)(void)) const;
 
  private:
-   Medium _medium;
-   Protocol _protocol;
-   bool _debug;
-   char* _boardID;
-   DeploiiHandler* _handler;
-   DeploiiHandler* selectHandler();
+   const char* _boardID;
+   const DeploiiHandler* _handler;
 
    void checkIntervals();
-   struct Interval* _intervals;
-   int _intervalCount;
-};
+   mutable struct Interval intervals[DEPLOII_MAX_INTERVALS];
+   mutable int _intervalCount;
+}
 
 #include "deploii.tpp"
 

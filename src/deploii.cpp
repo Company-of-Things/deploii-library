@@ -1,30 +1,10 @@
 #include "deploii.h"
 
-Deploii::Deploii(char* boardID, Medium medium, Protocol protocol, bool debug) : _boardID(boardID),
-                                                                                _medium(medium),
-                                                                                _protocol(protocol),
-                                                                                _debug(debug),
-                                                                                _intervals((struct Interval*)malloc(0)),
-                                                                                _intervalCount(0),
-                                                                                _handler(selectHandler()) {
+constexpr Deploii::Deploii(const char* boardID) : _boardID(boardID), _handler(), _intervalCount(0) {
 }
 
 Deploii::~Deploii() {
-   delete _handler;
-   free(_intervals);
-}
-
-void Deploii::connect() {
-   _handler->connect();
-}
-
-void Deploii::connect(char* ssid,
-                      const char* pwd,
-                      const char* host,
-                      const int port,
-                      const char* url,
-                      bool ssl) {
-   _handler->connect(_boardID, ssid, pwd, host, port, url, ssl);
+   free(_handler);
 }
 
 void Deploii::loop() {
@@ -32,20 +12,9 @@ void Deploii::loop() {
    checkIntervals();
 }
 
-DeploiiHandler* Deploii::selectHandler() {
-   if (_medium == Medium::WiFi && _protocol == Protocol::WebSockets) return new DeploiiHandlerWiFiWS(_debug);
-   if (_medium == Medium::WiFi && _protocol == Protocol::HTTP) return new DeploiiHandlerWiFiHTTP(_debug);
-
-   return new DeploiiHandler(_debug);
-}
-
-void Deploii::setDebug(bool debug){
-  _debug = debug;
-  _handler->_debug = debug;
-}
-
 void Deploii::interval(int intervalLength, void (*cb)(void)) {
-   _intervals = (struct Interval*)realloc(_intervals, sizeof(struct Interval) * (_intervalCount + 1));
+   if (_intervalCount == DEPLOII_MAX_INTERVALS) return;
+
    _intervals[_intervalCount].intervalLength = intervalLength;
    _intervals[_intervalCount].cb = cb;
    _intervals[_intervalCount].previousTime = millis();
