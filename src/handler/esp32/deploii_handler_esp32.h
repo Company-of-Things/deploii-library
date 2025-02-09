@@ -2,7 +2,7 @@
 #define DEPLOII_HANDLER_IMPLEMENTATION_h
 
 #include "Arduino.h"
-#include "deploii_constants.h"
+#include "../deploii_constants.h"
 
 #if Deploii_protocol == Deploii_WebSockets
 
