@@ -8,21 +8,21 @@
 #define DEPLOII_MAX_INTERVALS 10
 
 enum Medium {
-   WiFi,
-   NarrowBand
+   Deploii_WiFi,
+   Deploii_NarrowBand
 };
 
 enum Protocol {
-   WebSockets,
-   HTTP,
-   MQTT
+   Deploii_WebSockets,
+   Deploii_HTTP,
+   Deploii_MQTT
 };
 
 #ifndef Deploii_medium
-#define Deploii_medium WiFi
+#define Deploii_medium Deploii_WiFi
 #endif  // !Deploii_medium
 #ifndef Deploii_protocol
-#define Deploii_protocol WebSockets
+#define Deploii_protocol Deploii_WebSockets
 #endif  // !Deploii_protocol
 #ifndef Deploii_debug
 #define Deploii_debug 0
