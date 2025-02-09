@@ -1,6 +1,6 @@
 #include "deploii.h"
 
-constexpr Deploii::Deploii(const char* boardID) : _boardID(boardID), _handler(), _intervalCount(0) {
+Deploii::Deploii(const char* boardID) : _boardID(boardID), _handler(), _intervalCount(0) {
 }
 
 Deploii::~Deploii() {

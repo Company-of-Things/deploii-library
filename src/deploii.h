@@ -8,22 +8,21 @@
 #define DEPLOII_MAX_INTERVALS 10
 
 enum Medium {
-   None,
    WiFi,
    NarrowBand
 };
 
 enum Protocol {
-   None,
    WebSockets,
    HTTP,
    MQTT
 };
+
 #ifndef Deploii_medium
-#define Deploii_medium None
+#define Deploii_medium WiFi
 #endif  // !Deploii_medium
 #ifndef Deploii_protocol
-#define Deploii_protocol None
+#define Deploii_protocol WebSockets
 #endif  // !Deploii_protocol
 #ifndef Deploii_debug
 #define Deploii_debug 0
@@ -39,31 +38,29 @@ struct Interval {
 
 class Deploii {
  public:
-   constexpr Deploii(const char* boardID);
+   Deploii(const char* boardID);
    ~Deploii();
 
    template <typename T, size_t length>
-   void send(MsgPack::str_t dataStreamID, const T (&data)[length]) const;
+   void send(MsgPack::str_t dataStreamID, const T (&data)[length]);
 
    template <typename T>
-   void send(MsgPack::str_t dataStreamID, T data) const;
+   void send(MsgPack::str_t dataStreamID, T data);
 
    template <typename... Args>
-   void connect(Args&&... args) const {
-      _handler->connect(_boardID, std::forward<Args>(args)...);
-   }
+   void connect(Args&&... args);
 
    void loop() const;
-   void interval(int intervalLength, void (*cb)(void)) const;
+   void interval(int intervalLength, void (*cb)(void));
 
  private:
    const char* _boardID;
-   const DeploiiHandler* _handler;
+   DeploiiHandler* _handler;
 
    void checkIntervals();
-   mutable struct Interval intervals[DEPLOII_MAX_INTERVALS];
-   mutable int _intervalCount;
-}
+   struct Interval intervals[DEPLOII_MAX_INTERVALS];
+   int _intervalCount;
+};
 
 #include "deploii.tpp"
 
