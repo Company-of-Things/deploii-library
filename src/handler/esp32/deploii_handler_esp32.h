@@ -16,7 +16,8 @@
 class DeploiiHandler {
  public:
    DeploiiHandler();
-   ̈~DeploiiHandler();
+
+   ~DeploiiHandler();
 
    void loop();
    void send(const uint8_t* data, size_t size);
