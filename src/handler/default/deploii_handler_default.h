@@ -3,10 +3,10 @@
 
 #include "../deploii_handler.h"
 
-class Deploii_handler {
+class DeploiiHandler {
  public:
-   Deploii_handler();
-   ~Deploii_handler();
+   DeploiiHandler();
+   ~DeploiiHandler();
 
    void send(const uint8_t* data, size_t size) {}
 
