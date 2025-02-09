@@ -54,7 +54,7 @@ class Deploii {
    void interval(int intervalLength, void (*cb)(void));
 
  private:
-   const char* _boardID;
+   char* _boardID;
    DeploiiHandler* _handler;
 
    void checkIntervals();
