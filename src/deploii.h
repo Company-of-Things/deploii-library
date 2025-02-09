@@ -50,7 +50,7 @@ class Deploii {
 
    template <typename... Args>
    void connect(Args&&... args) const {
-      _handler->connect(std::forward<Args>(args)...);
+      _handler->connect(_boardID, std::forward<Args>(args)...);
    }
 
    void loop() const;
