@@ -11,9 +11,9 @@ DeploiiHandler::DeploiiHandler()
 
 DeploiiHandler::~DeploiiHandler() {
 #if Deploii_protocol == Deploii_WebSockets
-   delete _ws;
+   _ws.~WebsocketsClient();
 #elif Deploii_protocol == Deploii_HTTP
-   delete _http;
+   _http.~HTTP_client();
 #endif  // Deploii_protocol
 }
 
