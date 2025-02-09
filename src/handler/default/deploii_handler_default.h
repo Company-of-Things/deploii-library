@@ -1,5 +1,5 @@
-#ifndef DEPLOII_HANDLER_DEFAULT_h
-#define DEPLOII_HANDLER_DEFAULT_h
+#ifndef DEPLOII_HANDLER_IMPLEMENTATION_h
+#define DEPLOII_HANDLER_IMPLEMENTATION_h
 
 #include "../deploii_handler.h"
 
