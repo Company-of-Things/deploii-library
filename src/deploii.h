@@ -38,7 +38,7 @@ struct Interval {
 
 class Deploii {
  public:
-   Deploii(const char* boardID);
+   Deploii(char* boardID);
    ~Deploii();
 
    template <typename T, size_t length>
