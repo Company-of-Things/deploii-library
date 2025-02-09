@@ -11,7 +11,7 @@ DeploiiHandler::DeploiiHandler()
 
 DeploiiHandler::~DeploiiHandler() {
 #if Deploii_protocol == Deploii_WebSockets
-   _ws.~WebsocketsClient();
+   _ws.~WebSocketsClient();
 #elif Deploii_protocol == Deploii_HTTP
    _http.~HTTP_client();
 #endif  // Deploii_protocol
