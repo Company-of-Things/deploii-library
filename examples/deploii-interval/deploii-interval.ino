@@ -1,6 +1,9 @@
 #include <deploii.h>
 
-Deploii oi("Board ID", Medium::WiFi, Protocol::WebSockets);
+#define Deploii_medium WiFi
+#define Deploii_protocol WebSockets
+
+Deploii oi("Board ID");
 
 int myData = 10;
 int myDataArray[] = {1, 2, 3};
