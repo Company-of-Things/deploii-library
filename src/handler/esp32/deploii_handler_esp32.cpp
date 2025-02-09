@@ -17,7 +17,7 @@ DeploiiHandler::~DeploiiHandler() {
 #endif  // Deploii_protocol
 }
 
-void DeploiiHandler::connect(char* boardID, char* ssid, const char* pwd) {
+void DeploiiHandler::connect(char* boardID, const char* ssid, const char* pwd) {
 #if Deploii_medium == Deploii_WiFi
    WiFi.mode(WIFI_STA);
    WiFi.begin(ssid, pwd);

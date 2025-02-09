@@ -25,7 +25,7 @@ class DeploiiHandler {
 #if Deploii_medium == Deploii_WiFi
    void connect(
        char* boardID,
-       char* ssid,
+       const char* ssid,
        const char* pwd);
 
 #if Deploii_protocol == Deploii_WebSockets
