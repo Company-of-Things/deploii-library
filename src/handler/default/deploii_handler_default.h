@@ -1,7 +1,8 @@
 #ifndef DEPLOII_HANDLER_IMPLEMENTATION_h
 #define DEPLOII_HANDLER_IMPLEMENTATION_h
 
-#include "../deploii_handler.h"
+#include "Arduino.h"
+#include "deploii_constants.h"
 
 class DeploiiHandler {
  public:
