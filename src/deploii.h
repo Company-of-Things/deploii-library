@@ -50,7 +50,7 @@ class Deploii {
    template <typename... Args>
    void connect(Args&&... args);
 
-   void loop() const;
+   void loop();
    void interval(int intervalLength, void (*cb)(void));
 
  private:
@@ -58,7 +58,7 @@ class Deploii {
    DeploiiHandler* _handler;
 
    void checkIntervals();
-   struct Interval intervals[DEPLOII_MAX_INTERVALS];
+   struct Interval _intervals[DEPLOII_MAX_INTERVALS];
    int _intervalCount;
 };
 
