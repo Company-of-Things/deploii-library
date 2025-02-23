@@ -10,7 +10,7 @@ void DeploiiHandler::send(const uint8_t* data, size_t size) {
 }
 
 template <typename... Args>
-void connect(Args&&... args) {}
+void DeploiiHandler::connect(Args&&... args) {}
 
-void loop() {
+void DeploiiHandler::loop() {
 }
