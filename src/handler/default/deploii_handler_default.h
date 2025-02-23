@@ -1,3 +1,5 @@
+#if defined(DEPLOII_DEFAULT)
+
 #ifndef DEPLOII_HANDLER_IMPLEMENTATION_h
 #define DEPLOII_HANDLER_IMPLEMENTATION_h
 
@@ -19,4 +21,6 @@ class DeploiiHandler {
    void loop();
 };
 
-#endif
+#endif // DEPLOII_HANDLER_IMPLEMENTATION_h
+
+#endif // DEPLOII_DEFAULT

@@ -1,3 +1,5 @@
+#if defined (DEPLOII_DEFAULT)
+
 #include "deploii_handler_default.h"
 
 DeploiiHandler::DeploiiHandler(char* boardID) {
@@ -11,3 +13,4 @@ void DeploiiHandler::send(const uint8_t* data, size_t size) {
 
 void DeploiiHandler::loop() {
 }
+#endif  // DEPLOII_DEFAULT
