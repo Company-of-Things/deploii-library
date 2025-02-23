@@ -31,9 +31,9 @@ enum Protocol {
 #include "./handler/deploii_handler.h"
 
 struct Interval {
-   int intervalLength;
-   int previousTime;
-   void (*cb)(void);
+  unsigned long intervalLength;
+  unsigned long previousTime;
+  void (*cb)(void);
 };
 
 class Deploii {
