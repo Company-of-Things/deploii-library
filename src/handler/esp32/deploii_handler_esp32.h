@@ -1,18 +1,20 @@
 #ifndef DEPLOII_HANDLER_IMPLEMENTATION_h
 #define DEPLOII_HANDLER_IMPLEMENTATION_h
 
+#if defined(ESP32)
+
 #include "Arduino.h"
 #include "../deploii_constants.h"
 
-#if Deploii_protocol == Deploii_WebSockets
+#if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
 
 #include <WebSocketsClient.h>
 
-#elif Deploii_protocol == Deploii_HTTP
+#elif DEPLOII_PROTOCOL == DEPLOII_HTTP
 
 #include <HTTPClient.h>
 
-#endif  // Deploii_protocol
+#endif  // DEPLOII_PROTOCOL
 
 class DeploiiHandler {
  public:
@@ -23,24 +25,25 @@ class DeploiiHandler {
    void loop();
    void send(const uint8_t* data, size_t size);
 
-#if Deploii_medium == Deploii_WiFi
+#if DEPLOII_MEDIUM == DEPLOII_WIFI
    void connect(
        char* boardID,
        const char* ssid,
        const char* pwd);
 
-#if Deploii_protocol == Deploii_WebSockets
+#if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
 
  private:
    WebSocketsClient _ws;
-#elif Deploii_protocol == Deploii_HTTP
+#elif DEPLOII_PROTOCOL == DEPLOII_HTTP
  private:
    HTTP_client _http;
-#endif  // Deploii_protocol
+#endif  // DEPLOII_PROTOCOL
 
 #else
 
-#endif  // Deploii_medium
+#endif  // DEPLOII_MEDIUM
 };
 
-#endif
+#endif // ESP32 
+#endif // DEPLOII_HANDLER_IMPLEMENTATION_h

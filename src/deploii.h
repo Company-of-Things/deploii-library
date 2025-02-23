@@ -8,26 +8,26 @@
 #define DEPLOII_MAX_INTERVALS 10
 
 enum Medium {
-   Deploii_WiFi,
-   Deploii_NarrowBand
+   DEPLOII_WIFI,
+   DEPLOII_NARROWBAND
 };
 
 enum Protocol {
-   Deploii_WebSockets,
-   Deploii_HTTP,
-   Deploii_MQTT
+   DEPLOII_WEBSOCKETS,
+   DEPLOII_HTTP,
+   DEPLOII_MQTT
 };
 
-#ifndef Deploii_medium
-#define Deploii_medium Deploii_WiFi
-#endif  // !Deploii_medium
-#ifndef Deploii_protocol
-#define Deploii_protocol Deploii_WebSockets
-#endif  // !Deploii_protocol
-#ifndef Deploii_debug
-#define Deploii_debug 0
-#endif  // !Deploii_debug
-#define Deploii_debug_interface Serial
+#ifndef DEPLOII_MEDIUM
+#define DEPLOII_MEDIUM DEPLOII_WIFI
+#endif  // !DEPLOII_MEDIUM
+#ifndef DEPLOII_PROTOCOL
+#define DEPLOII_PROTOCOL DEPLOII_WEBSOCKETS
+#endif  // !DEPLOII_PROTOCOL
+#ifndef DEPLOII_DEBUG
+#define DEPLOII_DEBUG 0
+#endif  // !DEPLOII_DEBUG
+#define DEPLOII_DEBUG_INTERFACE Serial
 #include "./handler/deploii_handler.h"
 
 struct Interval {

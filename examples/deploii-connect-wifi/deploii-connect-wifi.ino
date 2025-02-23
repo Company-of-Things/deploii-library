@@ -1,7 +1,7 @@
 #include <deploii.h>
 
-#define Deploii_medium Deploii_WiFi
-#define Deploii_protocol Deploii_WebSockets
+#define DEPLOII_MEDIUM DEPLOII_WIFI
+#define DEPLOII_PROTOCOL DEPLOII_WEBSOCKETS
 
 Deploii oi("BOARD-ID");
 
