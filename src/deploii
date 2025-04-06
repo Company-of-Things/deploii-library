@@ -1,6 +1,6 @@
 #include "deploii.h"
 
-Deploii::Deploii(char* boardID) : _boardID(boardID), _handler(), _intervalCount(0) {
+Deploii::Deploii(char* boardID) : _boardID(boardID), _handler(new DeploiiHandler), _intervalCount(0) {
 }
 
 Deploii::~Deploii() {

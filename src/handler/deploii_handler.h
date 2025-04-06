@@ -1,6 +1,5 @@
 #ifndef DEPLOII_HANDLER_h
 #define DEPLOII_HANDLER_h
-
 #if defined(ESP32)
 #include "./esp32/deploii_handler_esp32.h"
 #else

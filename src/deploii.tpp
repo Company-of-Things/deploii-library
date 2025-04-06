@@ -46,5 +46,7 @@ void Deploii::send(MsgPack::str_t dataStreamID, T data) {
 // Forwards any arguments through the connect function into the corresponding overload at the handler
 template <typename... Args>
 void Deploii::connect(Args&&... args) {
+   Serial.println("Deploii_connect");
+   Serial.println(reinterpret_cast<uintptr_t>(_handler));
    _handler->connect(_boardID, std::forward<Args>(args)...);
 }

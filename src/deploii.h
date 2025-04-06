@@ -7,16 +7,13 @@
 
 #define DEPLOII_MAX_INTERVALS 10
 
-enum Medium {
-   DEPLOII_WIFI,
-   DEPLOII_NARROWBAND
-};
+// Just so we can compare macro values
+#define DEPLOII_WIFI 0
+#define DEPLOII_NARROWBAND 1
 
-enum Protocol {
-   DEPLOII_WEBSOCKETS,
-   DEPLOII_HTTP,
-   DEPLOII_MQTT
-};
+#define DEPLOII_WEBSOCKETS 0
+#define DEPLOII_HTTP 1
+#define DEPLOII_MQTT 2
 
 #ifndef DEPLOII_MEDIUM
 #define DEPLOII_MEDIUM DEPLOII_WIFI
@@ -28,18 +25,22 @@ enum Protocol {
 #define DEPLOII_DEBUG 0
 #endif  // !DEPLOII_DEBUG
 #define DEPLOII_DEBUG_INTERFACE Serial
+#include "deploii_certs.h"
 #include "./handler/deploii_handler.h"
 
 struct Interval {
-  unsigned long intervalLength;
-  unsigned long previousTime;
-  void (*cb)(void);
+   unsigned long intervalLength;
+   unsigned long previousTime;
+   void (*cb)(void);
 };
 
 class Deploii {
  public:
-   Deploii(char* boardID);
-   ~Deploii();
+   Deploii(char* boardID) : _boardID(boardID), _handler(new DeploiiHandler), _intervalCount(0) {
+                            };
+   ~Deploii() {
+      free(_handler);
+   };
 
    template <typename T, size_t length>
    void send(MsgPack::str_t dataStreamID, const T (&data)[length]);
@@ -50,14 +51,33 @@ class Deploii {
    template <typename... Args>
    void connect(Args&&... args);
 
-   void loop();
-   void interval(int intervalLength, void (*cb)(void));
+   void loop() {
+      _handler->loop();
+      checkIntervals();
+   };
+
+   void interval(int intervalLength, void (*cb)(void)) {
+      if (_intervalCount == DEPLOII_MAX_INTERVALS) return;
+
+      _intervals[_intervalCount].intervalLength = intervalLength;
+      _intervals[_intervalCount].cb = cb;
+      _intervals[_intervalCount].previousTime = millis();
+      _intervalCount++;
+   };
 
  private:
    char* _boardID;
    DeploiiHandler* _handler;
 
-   void checkIntervals();
+   void checkIntervals() {
+      for (int i = 0; i < _intervalCount; i++) {
+         unsigned long currentTime = millis();
+         if (currentTime >= _intervals[i].previousTime + _intervals[i].intervalLength) {
+            _intervals[i].cb();
+            _intervals[i].previousTime = currentTime;
+         }
+      }
+   };
    struct Interval _intervals[DEPLOII_MAX_INTERVALS];
    int _intervalCount;
 };

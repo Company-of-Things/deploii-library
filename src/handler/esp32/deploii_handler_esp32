@@ -1,11 +1,11 @@
-#if defined (ESP32)
+#if defined(ESP32)
 
 #include "deploii_handler_esp32.h"
 
 DeploiiHandler::DeploiiHandler()
 #if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
     : _ws()
-#elif DEPLOII_PROTOCOL == HTTP
+#elif DEPLOII_PROTOCOL == DEPLOII_HTTP
     : _http()
 #endif  // DEPLOII_PROTOCOL
 {
@@ -15,11 +15,14 @@ DeploiiHandler::~DeploiiHandler() {
 #if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
    _ws.~WebSocketsClient();
 #elif DEPLOII_PROTOCOL == DEPLOII_HTTP
-   _http.~HTTP_client();
+   _http ~HTTP_client();
 #endif  // DEPLOII_PROTOCOL
 }
 
 void DeploiiHandler::connect(char* boardID, const char* ssid, const char* pwd) {
+   Serial.println("Handler_connect");
+   Serial.print("Board ID: ");
+   Serial.println(boardID);
 #if DEPLOII_MEDIUM == DEPLOII_WIFI
    WiFi.mode(WIFI_STA);
    WiFi.begin(ssid, pwd);
@@ -27,12 +30,19 @@ void DeploiiHandler::connect(char* boardID, const char* ssid, const char* pwd) {
       delay(DEPLOII_WIFI_RECONNECT_TIME);
    }
 #endif  // DEPLOII_MEDIUM
-
+   Serial.println("Wifi connected");
 #if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
-   char authHeader[60];
+   static char authHeader[60];
    sprintf(authHeader, "%s%s", "Authorization: ", boardID);
+   Serial.print("_ws address: ");
+   Serial.println(reinterpret_cast<uintptr_t>(&_ws));
+   Serial.println("Setting auth header...");
    _ws.setExtraHeaders(authHeader);
+   Serial.println("Beginning ws...");
+   Serial.println(DEPLOII_HOST DEPLOII_WS_URL);
+   Serial.println(DEPLOII_PORT);
    _ws.beginSSL(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
+   Serial.println(_ws.isConnected());
 
 #elif DEPLOII_PROTOCOL == DEPLOII_HTTP
    http.begin(host, port, url, buypass_cert);
@@ -41,7 +51,9 @@ void DeploiiHandler::connect(char* boardID, const char* ssid, const char* pwd) {
 }
 
 void DeploiiHandler::send(const uint8_t* data, size_t size) {
+   Serial.println("Sending...");
 #if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
+   Serial.println(_ws.isConnected());
    _ws.sendBIN(data, size);
 #elif DEPLOII_PROTOCOL == DEPLOII_HTTP
    _http.POST((uint8_t*)data, size);
@@ -56,4 +68,4 @@ void DeploiiHandler::loop() {
 #endif  // DEPLOII_PROTOCOL
 }
 
-#endif // ESP32
+#endif  // ESP32

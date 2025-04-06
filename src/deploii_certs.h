@@ -1,3 +1,6 @@
+#ifndef DEPLOII_CERTS_h
+#define DEPLOII_CERTS_h
+
 static const char* buypass_cert =
     "-----BEGIN CERTIFICATE-----\n"
     "MIIFWTCCA0GgAwIBAgIBAjANBgkqhkiG9w0BAQsFADBOMQswCQYDVQQGEwJOTzEd\n"
@@ -30,3 +33,5 @@ static const char* buypass_cert =
     "3PFaTWwyI0PurKju7koSCTxdccK+efrCh2gdC/1cacwG0Jp9VJkqyTkaGa9LKkPz\n"
     "Y11aWOIv4x3kqdbQCtCev9eBCfHJxyYNrJgWVqA=\n"
     "-----END CERTIFICATE-----\n";
+
+#endif
