@@ -1,88 +1,129 @@
+/*************************************************************************************/
+/*                                                                                   */
+/* Arduino library for Deploii, an educational IoT platform, written 2025.           */
+/* For documentation see https://github.com/Company-of-Things/deploii-library        */
+/*                                                                                   */
+/*************************************************************************************/
+
 #ifndef DEPLOII_h
 #define DEPLOII_h
 
+/*************************************************************************************/
+
 #include "Arduino.h"
-#include <utility>
 #include <MsgPack.h>
-
-#define DEPLOII_MAX_INTERVALS 10
-
-// Just so we can compare macro values
-#define DEPLOII_WIFI 0
-#define DEPLOII_NARROWBAND 1
-
-#define DEPLOII_WEBSOCKETS 0
-#define DEPLOII_HTTP 1
-#define DEPLOII_MQTT 2
-
-#ifndef DEPLOII_MEDIUM
-#define DEPLOII_MEDIUM DEPLOII_WIFI
-#endif  // !DEPLOII_MEDIUM
-#ifndef DEPLOII_PROTOCOL
-#define DEPLOII_PROTOCOL DEPLOII_WEBSOCKETS
-#endif  // !DEPLOII_PROTOCOL
-#ifndef DEPLOII_DEBUG
-#define DEPLOII_DEBUG 0
-#endif  // !DEPLOII_DEBUG
-#define DEPLOII_DEBUG_INTERFACE Serial
-
 #include "deploii_certs.h"
 #include "./handler/deploii_handler.h"
 
-struct Interval {
-   unsigned long intervalLength;
-   unsigned long previousTime;
-   void (*cb)(void);
+/*************************************************************************************/
+
+/*
+ * Defines an action to be run at a set interval
+ */
+struct Interval
+{
+  unsigned long intervalLength;
+  unsigned long previousTime;
+  void (*cb)(void);
 };
 
-class Deploii {
- public:
-   Deploii(char* boardID) : _boardID(boardID), _handler(new DeploiiHandler), _intervalCount(0) {
-                            };
-   ~Deploii() {
-      free(_handler);
-   };
+/*************************************************************************************/
 
-   template <typename T, size_t length>
-   void send(MsgPack::str_t dataStreamID, const T (&data)[length]);
+class Deploii
+{
+public:
+  /*
+   * Constructor and destructor, initializes the microcontroller handler
+   */
+  Deploii(char *boardID)
+      : _boardID(boardID),
+        _handler(new DeploiiHandler),
+        _intervalCount(0) {
+        };
+  ~Deploii()
+  {
+    free(_handler);
+  };
 
-   template <typename T>
-   void send(MsgPack::str_t dataStreamID, T data);
+  /*
+   * Send data of type array to datastream
+   */
+  template <typename T, size_t length>
+  void send(MsgPack::str_t dataStreamID, const T (&data)[length]);
 
-   template <typename... Args>
-   void connect(Args&&... args);
+  /*
+   * Send data of single value type to datastream
+   */
+  template <typename T>
+  void send(MsgPack::str_t dataStreamID, T data);
 
-   void loop() {
-      _handler->loop();
-      checkIntervals();
-   };
+  /*
+   * Connect to Deploii server over the selected medium
+   * Different medium need different arguments, see handlers
+   */
+  template <typename... Args>
+  void connect(Args &&...args);
 
-   void interval(int intervalLength, void (*cb)(void)) {
-      if (_intervalCount == DEPLOII_MAX_INTERVALS) return;
+  /*
+   * Keeps connection to Deploii server alive
+   * Must be called regularely
+   */
+  void loop()
+  {
+    _handler->loop();
+    checkIntervals();
+  };
 
-      _intervals[_intervalCount].intervalLength = intervalLength;
-      _intervals[_intervalCount].cb = cb;
-      _intervals[_intervalCount].previousTime = millis();
-      _intervalCount++;
-   };
+  /*
+   * Register a new interval defined in milliseconds
+   */
+  void interval(int intervalLength, void (*cb)(void))
+  {
+    if (_intervalCount == DEPLOII_MAX_INTERVALS)
+      return;
 
- private:
-   char* _boardID;
-   DeploiiHandler* _handler;
+    _intervals[_intervalCount].intervalLength = intervalLength;
+    _intervals[_intervalCount].cb = cb;
+    _intervals[_intervalCount].previousTime = millis();
+    _intervalCount++;
+  };
 
-   void checkIntervals() {
-      for (int i = 0; i < _intervalCount; i++) {
-         unsigned long currentTime = millis();
-         if (currentTime >= _intervals[i].previousTime + _intervals[i].intervalLength) {
-            _intervals[i].cb();
-            _intervals[i].previousTime = currentTime;
-         }
+private:
+  char *_boardID;
+  DeploiiHandler *_handler;
+
+  /*
+   * Crude concurrency, keeps track of and calls interval callbacks
+   */
+  void checkIntervals()
+  {
+    for (int i = 0; i < _intervalCount; i++)
+    {
+      unsigned long currentTime = millis();
+      if (currentTime >= _intervals[i].previousTime + _intervals[i].intervalLength)
+      {
+        _intervals[i].cb();
+        _intervals[i].previousTime = currentTime;
       }
-   };
-   struct Interval _intervals[DEPLOII_MAX_INTERVALS];
-   int _intervalCount;
+    }
+  };
+
+  /*
+   * Interval metadata
+   */
+  struct Interval _intervals[DEPLOII_MAX_INTERVALS];
+  int _intervalCount;
 };
 
+/*************************************************************************************/
+
+/*
+ * Type templates for send and connect functions
+ */
 #include "deploii.tpp"
 
-#endif
+/*************************************************************************************/
+
+#endif // !DEPLOII_h
+
+/*************************************************************************************/

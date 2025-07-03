@@ -1,5 +1,13 @@
+/*************************************************************************************/
+
 #ifndef DEPLOII_HANDLER_h
 #define DEPLOII_HANDLER_h
+
+/*************************************************************************************/
+
+/*
+ * Include correct microcontroller handler
+ */
 #if defined(ESP32)
 #include "./esp32/deploii_handler_esp32.h"
 #else
@@ -8,4 +16,8 @@
 #include "./default/deploii_handler_default.h"
 #endif
 
-#endif  // DEPLOII_HANDLER_h
+/*************************************************************************************/
+
+#endif  // !DEPLOII_HANDLER_h
+
+/*************************************************************************************/

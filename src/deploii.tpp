@@ -1,5 +1,9 @@
+/*************************************************************************************/
+
 #include "deploii.h"
 #include <type_traits>
+
+/*************************************************************************************/
 
 template <typename T, size_t length>
 void Deploii::send(MsgPack::str_t dataStreamID, const T (&data)[length]) {
@@ -22,6 +26,8 @@ void Deploii::send(MsgPack::str_t dataStreamID, const T (&data)[length]) {
    _handler->send(packer.data(), packer.size());
 }
 
+/*************************************************************************************/
+
 template <typename T>
 void Deploii::send(MsgPack::str_t dataStreamID, T data) {
    // Workaround for sending chars in text format
@@ -43,10 +49,17 @@ void Deploii::send(MsgPack::str_t dataStreamID, T data) {
    _handler->send(packer.data(), packer.size());
 }
 
-// Forwards any arguments through the connect function into the corresponding overload at the handler
+/*************************************************************************************/
+
+/*
+ * Forwards any arguments through the connect function into the corresponding 
+ * overload at the handler.
+ */
 template <typename... Args>
 void Deploii::connect(Args&&... args) {
    Serial.println("Deploii_connect");
    Serial.println(reinterpret_cast<uintptr_t>(_handler));
    _handler->connect(_boardID, std::forward<Args>(args)...);
 }
+
+/*************************************************************************************/

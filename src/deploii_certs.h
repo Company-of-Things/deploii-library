@@ -1,7 +1,14 @@
+/*************************************************************************************/
+
 #ifndef DEPLOII_CERTS_h
 #define DEPLOII_CERTS_h
 
-static const char* buypass_cert =
+/*************************************************************************************/
+
+/*
+ * Public key for encrypted communications with Deploii server
+ */
+static const char *buypass_cert =
     "-----BEGIN CERTIFICATE-----\n"
     "MIIFWTCCA0GgAwIBAgIBAjANBgkqhkiG9w0BAQsFADBOMQswCQYDVQQGEwJOTzEd\n"
     "MBsGA1UECgwUQnV5cGFzcyBBUy05ODMxNjMzMjcxIDAeBgNVBAMMF0J1eXBhc3Mg\n"
@@ -34,4 +41,8 @@ static const char* buypass_cert =
     "Y11aWOIv4x3kqdbQCtCev9eBCfHJxyYNrJgWVqA=\n"
     "-----END CERTIFICATE-----\n";
 
-#endif
+/*************************************************************************************/
+
+#endif // !DEPLOII_CERTS_h
+
+/*************************************************************************************/
