@@ -1,6 +1,3 @@
-#ifndef DEPLOII_HANDLER_IMPLEMENTATION_h
-#define DEPLOII_HANDLER_IMPLEMENTATION_h
-
 #if defined(ESP32)
 
 #pragma message("esp32" DEPLOII_PROTOCOL)
@@ -110,4 +107,3 @@ class DeploiiHandler {
 };
 
 #endif  // ESP32
-#endif  // DEPLOII_HANDLER_IMPLEMENTATION_h

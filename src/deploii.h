@@ -25,6 +25,7 @@
 #define DEPLOII_DEBUG 0
 #endif  // !DEPLOII_DEBUG
 #define DEPLOII_DEBUG_INTERFACE Serial
+
 #include "deploii_certs.h"
 #include "./handler/deploii_handler.h"
 
