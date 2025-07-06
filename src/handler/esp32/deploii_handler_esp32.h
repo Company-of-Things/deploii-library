@@ -7,6 +7,7 @@
 /*************************************************************************************/
 
 #include "Arduino.h"
+#include "deploii_debug.h"
 
 #if DEPLOII_MEDIUM == DEPLOII_MEDIUM_WIFI
 #include <WiFi.h>
@@ -82,6 +83,8 @@ public:
     {
       delay(DEPLOII_WIFI_RECONNECT_TIME);
     }
+
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to wifi");
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     static char authHeader[60];
