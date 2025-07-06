@@ -39,7 +39,7 @@ static_assert(DEPLOII_PROTOCOL >= DEPLOII_WEBSOCKETS && DEPLOII_PROTOCOL <= DEPL
 #ifndef DEPLOII_DEBUG
 #define DEPLOII_DEBUG 0
 #endif // !DEPLOII_DEBUG
-//
+
 #ifndef DEPLOII_HOST
 #define DEPLOII_HOST "deploii.no"
 #endif // !DEPLOII_HOST
