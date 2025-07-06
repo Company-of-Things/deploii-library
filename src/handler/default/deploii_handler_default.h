@@ -23,6 +23,7 @@ public:
 
   template <typename... Args>
   void connect(Args &&...args) {};
+  void setDataCallback(void (*cb)(uint8_t* data, size_t size)){};
 
   void loop() {};
 };
