@@ -29,6 +29,9 @@ struct Interval
   void (*cb)(void);
 };
 
+void (*_receiveCallback)(String ID, String data){nullptr};
+void _decodeDataCallback(uint8_t* data, size_t size);
+
 /*************************************************************************************/
 
 class Deploii
@@ -90,9 +93,14 @@ public:
     _intervalCount++;
   };
 
-private:
-  char *_boardID;
-  DeploiiHandler *_handler;
+   void receive(void (*cb)(String ID, String data)) {
+      _receiveCallback = cb;
+      _handler->setDataCallback(_decodeDataCallback);
+   }
+
+ private:
+   char* _boardID;
+   DeploiiHandler* _handler;
 
   /*
    * Crude concurrency, keeps track of and calls interval callbacks
@@ -116,6 +124,28 @@ private:
   struct Interval _intervals[DEPLOII_MAX_INTERVALS];
   int _intervalCount;
 };
+
+/*************************************************************************************/
+
+void _decodeDataCallback(uint8_t* data, size_t size) {
+   MsgPack::Unpacker unpacker;
+   unpacker.feed(data, size);
+ 
+   struct msgStruct
+   {
+     MsgPack::str_t key1;
+     MsgPack::str_t moduleId;
+     MsgPack::str_t key2;
+     MsgPack::str_t data;
+     MsgPack::str_t key3;
+     MsgPack::str_t cardId;
+     MSGPACK_DEFINE_MAP(key1, moduleId, key2, data, key3, cardId);
+   };
+   msgStruct msg;
+   unpacker.deserialize(msg);
+ 
+   _receiveCallback(msg.moduleId, msg.data);
+ } 
 
 /*************************************************************************************/
 

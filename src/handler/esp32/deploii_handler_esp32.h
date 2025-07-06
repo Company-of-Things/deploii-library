@@ -14,6 +14,8 @@
 
 #if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
 #include <WebSocketsClient.h>
+void _wsEvent(WStype_t type, uint8_t* payload, size_t length);
+void (*_dataCallback)(uint8_t* data, size_t size){nullptr};
 #elif DEPLOII_PROTOCOL == DEPLOII_HTTP
 #include <HTTPClient.h>
 #endif // DEPLOII_PROTOCOL
@@ -68,6 +70,9 @@ public:
     _http.POST((uint8_t *)data, size);
 #endif // DEPLOII_PROTOCOL
   };
+   void setDataCallback(void (*cb)(uint8_t* data, size_t size)) {
+      _dataCallback = cb;
+   }
 
 /*************************************************************************************/
 
@@ -89,6 +94,7 @@ public:
     static char authHeader[60];
     sprintf(authHeader, "%s%s", "Authorization: ", boardID);
     _ws.setExtraHeaders(authHeader);
+    _ws.onEvent(_wsEvent);
     _ws.beginSSL(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
 
 #elif DEPLOII_PROTOCOL == DEPLOII_HTTP
@@ -97,23 +103,32 @@ public:
 #endif // DEPLOII_PROTOCOL
   };
 
-/*************************************************************************************/
-
+ private:
 #if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
 
-private:
-  WebSocketsClient _ws;
+   WebSocketsClient _ws;
+
 #elif DEPLOII_PROTOCOL == DEPLOII_HTTP
-private:
-  HTTPClient _http;
-#endif // DEPLOII_PROTOCOL
+   HTTPClient _http;
+#endif  // DEPLOII_PROTOCOL
 
 #else // OTHER MEDIUMS
 
 #endif // DEPLOII_MEDIUM
 };
 
-/*************************************************************************************/
+#if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
+void _wsEvent(WStype_t type, uint8_t* payload, size_t length) {
+   switch (type) {
+   case WStype_BIN:
+      _dataCallback(payload, length);
+      break;
+
+   default:
+      break;
+   }
+}
+#endif
 
 #endif // ESP32
 #endif // DEPLOII_HANDLER_IMPLEMENTATION_h
