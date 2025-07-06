@@ -6,7 +6,6 @@
 
 /*************************************************************************************/
 
-#include "../deploii_constants.h"
 #include "Arduino.h"
 
 #if DEPLOII_MEDIUM == DEPLOII_WIFI
@@ -24,7 +23,6 @@
 class DeploiiHandler
 {
 public:
-  
 /*************************************************************************************/
 
   DeploiiHandler()
@@ -79,9 +77,6 @@ public:
       const char *ssid,
       const char *pwd)
   {
-    Serial.println("Handler_connect");
-    Serial.print("Board ID: ");
-    Serial.println(boardID);
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pwd);
 
@@ -90,30 +85,15 @@ public:
       delay(DEPLOII_WIFI_RECONNECT_TIME);
     }
 
-    Serial.println("Wifi connected");
-
 #if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
     static char authHeader[60];
     sprintf(authHeader, "%s%s", "Authorization: ", boardID);
-
-    Serial.print("_ws address: ");
-    Serial.println(reinterpret_cast<uintptr_t>(&_ws));
-    Serial.println("Setting auth header...");
-
     _ws.setExtraHeaders(authHeader);
-
-    Serial.println("Beginning ws...");
-    Serial.println(DEPLOII_HOST DEPLOII_WS_URL);
-    Serial.println(DEPLOII_PORT);
-
     _ws.beginSSL(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
 
-    Serial.println(_ws.isConnected());
-
 #elif DEPLOII_PROTOCOL == DEPLOII_HTTP
-    Serial.println("Test123");
-    Serial.println(_http.begin(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_HTTP_URL, buypass_cert));
     _http.addHeader("Authorization", boardID, false, false);
+
 #endif // DEPLOII_PROTOCOL
   };
 

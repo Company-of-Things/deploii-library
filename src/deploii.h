@@ -11,10 +11,11 @@
 /*************************************************************************************/
 
 #include "Arduino.h"
-#include <MsgPack.h>
 #include "deploii_certs.h"
 #include "deploii_config.h"
 #include "./handler/deploii_handler.h"
+#include "MsgPack.h"
+#include <assert.h>
 
 /*************************************************************************************/
 
