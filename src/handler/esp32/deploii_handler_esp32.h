@@ -63,8 +63,12 @@ public:
   {
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     _ws.sendBIN(data, size);
+    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending WEBSOCKET data of size 0x%zx", size);
+
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     _http.POST((uint8_t *)data, size);
+    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending HTTP data of size 0x%zx", size);
+
 #endif // DEPLOII_PROTOCOL
   };
 
@@ -81,32 +85,39 @@ public:
 
     while (WiFi.status() != WL_CONNECTED)
     {
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to WiFi");
       delay(DEPLOII_WIFI_RECONNECT_TIME);
     }
 
-    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to wifi");
+    IPAddress ip = WiFi.localIP();
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to WiFi with IP %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     static char authHeader[60];
     sprintf(authHeader, "%s%s", "Authorization: ", boardID);
     _ws.setExtraHeaders(authHeader);
+
+    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to Websocket server");
     _ws.beginSSL(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     _http.addHeader("Authorization", boardID, false, false);
 
 #endif // DEPLOII_PROTOCOL
+
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to Deploii server");
   };
 
 /*************************************************************************************/
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
-
 private:
   WebSocketsClient _ws;
+
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
 private:
   HTTPClient _http;
+
 #endif // DEPLOII_PROTOCOL
 
 #else // OTHER MEDIUMS

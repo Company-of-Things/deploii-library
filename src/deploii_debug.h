@@ -22,13 +22,25 @@ static void deploii_debug_init(void)
 
 /*************************************************************************************/
 
+/*
+ * Debug print function with specified logging level (see deploii_config.h).
+ * Takes args like printf, example:
+ * DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Test %d\n", 42)
+ */
 template <typename... Args>
 void DEPLOII_DPRINT(deploii_debug_t log_level, Args &&...args)
 {
   if (log_level <= DEPLOII_DEBUG)
   {
-    Serial.print("DEPLOII DEBUG: ");
-    Serial.println(std::forward<Args>(args)...);
+    char str_buff[100];
+    sprintf(str_buff, std::forward<Args>(args)...);
+
+    if (log_level == DEPLOII_DEBUG_INFO)
+      Serial.print("DEPLOII DEBUG INFO: ");
+    else if (log_level == DEPLOII_DEBUG_VERBOSE)
+      Serial.print("DEPLOII DEBUG VERBOSE: ");
+
+    Serial.println(String(str_buff));
   }
 }
 
