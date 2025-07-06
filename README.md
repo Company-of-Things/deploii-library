@@ -17,7 +17,7 @@
 </div>
 &nbsp; <br>
 
-An Arduino library for connecting your microcontroller to [Deploii](https://www.deploii.no), an educational IoT platform developed by Company of Things
+An Arduino library for connecting your microcontroller to [Deploii](https://www.deploii.no), an educational IoT platform developed by Company of Things.
 
 # Getting started 
 The first thing you want to do is to use macros to specify your medium and protocols, import the library and create an instance of the Deploii class. Here you will need to provide your board ID from Deploii. A list of all currently available mediums and protocols can be found [here](#currently-supported-mcus-and-protocols).
