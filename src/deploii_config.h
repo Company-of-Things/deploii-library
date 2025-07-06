@@ -53,7 +53,7 @@ static_assert(DEPLOII_PROTOCOL >= DEPLOII_WEBSOCKETS && DEPLOII_PROTOCOL <= DEPL
 #endif // !DEPLOII_WS_URL
 
 #ifndef DEPLOII_HTTP_URL
-#define DEPLOII_HTTP_URL "/mcu"
+#define DEPLOII_HTTP_URL "/mcu/data"
 #endif // !DEPLOII_HTTP_URL
 
 /*************************************************************************************/
