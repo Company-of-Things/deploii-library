@@ -143,6 +143,7 @@ void _decodeDataCallback(uint8_t* data, size_t size) {
    };
    msgStruct msg;
    unpacker.deserialize(msg);
+   DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "%s : %s", msg.moduleId, msg.data);
  
    _receiveCallback(msg.moduleId, msg.data);
  } 

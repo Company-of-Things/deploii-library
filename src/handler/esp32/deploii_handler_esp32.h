@@ -132,6 +132,7 @@ public:
 
 #if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
 void _wsEvent(WStype_t type, uint8_t* payload, size_t length) {
+   DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Websocket event code: %u", type);
    switch (type) {
    case WStype_BIN:
       _dataCallback(payload, length);
