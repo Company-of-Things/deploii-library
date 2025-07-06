@@ -20,11 +20,14 @@
 An Arduino library for connecting your microcontroller to [Deploii](https://www.deploii.no), an educational IoT platform developed by Company of Things
 
 # Getting started 
-The first thing you want to do is import the library and create an instance of the Deploii class. Here you will need to provide your board ID from Deploii, as well as a medium and protocol. A list of all currently available mediums and protocols can be found [here](#currently-supported-mcus-and-protocols).
+The first thing you want to do is to use macros to specify your medium and protocols, import the library and create an instance of the Deploii class. Here you will need to provide your board ID from Deploii. A list of all currently available mediums and protocols can be found [here](#currently-supported-mcus-and-protocols).
 ```c++
+#define DEPLOII_MEDIUM DEPLOII_MEDIUM_WIFI
+#define DEPLOII_PROTOCOL DEPLOII_PROTOCOL_WEBSOCKETS
+
 #include <deploii.h>
 
-Deploii oi("Board ID", Medium::WiFi, Protocol::WebSockets);
+Deploii oi("Board ID");
 ```
 In the setup function of the Arduino sketch, you need to call the connect function to connect to Deploii. The parameters of the connect function will vary based on your selected medium and protocol. For connection with Wifi and WebSockets this looks like:
 ```c++
@@ -40,11 +43,19 @@ If you want to do repeated tasks such as sending data at a set interval, you can
 ```c++
 oi.interval(1000, myFunction);
 ```
+In order to receive data from the Deploii control panel you need to register a callback with the receive function in setup. This callback function takes in the control panel module ID and its corresponding data, both as a String, and is called every time the MCU receives data. 
+```c++
+oi.receive(myCallback);
+```
 For protocols that maintain a persistent connection, such as the WebSocket protocol or when using intervals, it is required that you call the Deploii loop function inside of the arduino void loop. You also cannot use delays or other blocking code when using these protocols as they might break the connection.
 ```c++
 void loop(){
   oi.loop();
 }
+```
+By default, the library has a debug level set to INFO. the available debug levels are NONE, INFO and VERBOSE. Debug messages are printed to Serial, therefore Serial.begin() will be called from the debugger for all levels above NONE. Changing the debug level can be done with the following macro, which needs to happen before the inclusion of the deploii library.
+```c++
+#define DEPLOII_DEBUG DEPLOII_DEBUG_VERBOSE
 ```
 
 For more examples of how to use the library, please see [examples](https://github.com/Company-of-Things/deploii-library/tree/dev/examples). 
