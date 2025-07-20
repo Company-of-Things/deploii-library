@@ -105,7 +105,18 @@ public:
     _ws.onEvent(_wsEvent);
 
     DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to Websocket server");
+
+#if DEPLOII_SSL
     _ws.beginSSL(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
+#else
+    _ws.begin(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
+#endif
+
+    while (!_ws.isConnected())
+    {
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to Deploii websocket server");
+      delay(DEPLOII_WS_RECONNECT_TIME);
+    }
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     _http.addHeader("Authorization", boardID, false, false);

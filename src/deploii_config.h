@@ -67,6 +67,10 @@ static_assert(DEPLOII_DEBUG >= DEPLOII_DEBUG_NONE && DEPLOII_DEBUG <= DEPLOII_DE
 #define DEPLOII_HTTP_URL "/mcu/data"
 #endif // !DEPLOII_HTTP_URL
 
+#ifndef DEPLOII_SSL
+#define DEPLOII_SSL true
+#endif // !DEPLOII_SSL
+
 /*************************************************************************************/
 
 #define DEPLOII_SERIAL_BAUDRATE 115200
