@@ -9,18 +9,14 @@
 
 /*************************************************************************************/
 
-typedef enum
-{
-  DEPLOII_MEDIUM_WIFI,
-  DEPLOII_MEDIUM_NARROWBAND,
-} deploii_medium_t;
+// Mediums
+#define DEPLOII_MEDIUM_WIFI 0
+#define DEPLOII_MEDIUM_NARROWBAND 1
 
-typedef enum
-{
-  DEPLOII_PROTOCOL_WEBSOCKETS,
-  DEPLOII_PROTOCOL_HTTP,
-  DEPLOII_PROTOCOL_MQTT,
-} deploii_protocol_t;
+// Protocols
+#define DEPLOII_PROTOCOL_WEBSOCKETS 0
+#define DEPLOII_PROTOCOL_HTTP 1
+#define DEPLOII_PROTOCOL_MQTT 2
 
 typedef enum
 {
