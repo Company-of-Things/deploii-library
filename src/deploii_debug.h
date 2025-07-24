@@ -10,7 +10,7 @@
 
 /*************************************************************************************/
 
-__attribute__((constructor))
+//__attribute__((constructor))
 static void deploii_debug_init(void)
 {
   if (DEPLOII_DEBUG != DEPLOII_DEBUG_NONE)
