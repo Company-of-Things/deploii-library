@@ -8,7 +8,7 @@
       </picture>
    </a>
 
-  <p>Educational IoT platform</p>
+  <p>Educational IoT Platform</p>
 
   ![Release](https://img.shields.io/github/v/release/Company-of-Things/deploii-library?sort=date&display_name=tag&color=blue)
 ![Release Date](https://img.shields.io/github/release-date/Company-of-Things/deploii-library?sort=date&display_name=tag&color=green)
@@ -59,6 +59,21 @@ By default, the library has a debug level set to INFO. the available debug level
 ```
 
 For more examples of how to use the library, please see [examples](https://github.com/Company-of-Things/deploii-library/tree/dev/examples). 
+
+# Config Template
+
+Below is a list of all available config paramaters which can easiliy be pasted into you Arduino sketch. See `deploii_config.h` for available values.
+
+```c++
+#define DEPLOII_MEDIUM DEPLOII_MEDIUM_WIFI
+#define DEPLOII_PROTOCOL DEPLOII_PROTOCOL_WEBSOCKETS
+#define DEPLOII_DEBUG DEPLOII_DEBUG_INFO
+#define DEPLOII_HOST "deploii.no"
+#define DEPLOII_PORT 443
+#define DEPLOII_WS_URL "/mcu/ws"
+#define DEPLOII_HTTP_URL "/mcu/data"
+#define DEPLOII_SSL true
+```
 
 # Currently supported MCUs and protocols
 
