@@ -143,7 +143,10 @@ void _decodeDataCallback(uint8_t* data, size_t size) {
    };
    msgStruct msg;
    unpacker.deserialize(msg);
-   DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Decoded message: {\n %s : %s,\n %s : %s\n}", msg.key1, msg.moduleId, msg.key2, msg.data);
+
+  // ignore pings from ws server
+  if (msg.data == "connection_status")
+    return;
  
    _receiveCallback(msg.moduleId, msg.data);
  } 

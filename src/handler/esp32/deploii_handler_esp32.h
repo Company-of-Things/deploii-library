@@ -54,7 +54,19 @@ public:
   void loop()
   {
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
-    _ws.loop();
+    _ws.loop(); // must be called in order to reconnect after disconnect
+
+    // monitor connection status
+    _websocketConnectionStatus = _ws.isConnected();
+    if (_websocketConnectionStatus != _previousWebsocketConnectionStatus)
+    {
+      if (_websocketConnectionStatus == false)
+        DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Disconnected from Deploii WS server, attempting to connect...");
+      else
+        DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to Deploii WS server");
+    }
+    _previousWebsocketConnectionStatus = _websocketConnectionStatus;
+
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     // poll data from server
 #endif // DEPLOII_PROTOCOL
@@ -74,9 +86,13 @@ public:
 
 #endif // DEPLOII_PROTOCOL
   };
-   void setDataCallback(void (*cb)(uint8_t* data, size_t size)) {
-      _dataCallback = cb;
-   }
+
+/*************************************************************************************/
+
+  void setDataCallback(void (*cb)(uint8_t* data, size_t size))
+  {
+    _dataCallback = cb;
+  }
 
 /*************************************************************************************/
 
@@ -91,7 +107,7 @@ public:
 
     while (WiFi.status() != WL_CONNECTED)
     {
-      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to WiFi");
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to WiFi...");
       delay(DEPLOII_WIFI_RECONNECT_TIME);
     }
 
@@ -104,20 +120,23 @@ public:
     _ws.setExtraHeaders(authHeader);
     _ws.onEvent(_wsEvent);
 
-    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to Websocket server");
+#if DEPLOII_SSL
     _ws.beginSSL(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
+#else
+    _ws.begin(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
+#endif
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     _http.addHeader("Authorization", boardID, false, false);
 
 #endif // DEPLOII_PROTOCOL
-
-    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to Deploii server");
   };
 
  private:
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
    WebSocketsClient _ws;
+   bool _previousWebsocketConnectionStatus = false; 
+   bool _websocketConnectionStatus = false;
 
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
