@@ -70,7 +70,7 @@ public:
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
 
-    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending HTTP data of size 0x%zx", size);
+    //DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending HTTP data of size 0x%zx", size);
 
 #endif // DEPLOII_PROTOCOL
   };
@@ -104,7 +104,13 @@ public:
     _ws.onEvent(_wsEvent);
 
     DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to Websocket server");
+#if DEPLOII_SSL == true
+#pragma message("SSL is currently not supported for this device, please set the DEPLOII_SSL macro to false.")
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "SSL is currently not supported for this device, please set the DEPLOII_SSL macro to false.");
+    while(true);
+#else
     _ws.begin(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
+#endif // DEPLOII_SSL
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
 
