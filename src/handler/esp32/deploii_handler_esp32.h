@@ -13,12 +13,20 @@
 #include <WiFi.h>
 #endif // DEPLOII_MEDIUM
 
+void (*_dataCallback)(uint8_t* data, size_t size){nullptr};
+
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
 #include <WebSocketsClient.h>
 void _wsEvent(WStype_t type, uint8_t* payload, size_t length);
-void (*_dataCallback)(uint8_t* data, size_t size){nullptr};
+
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
 #include <HTTPClient.h>
+
+#if DEPLOII_SSL
+#include <WiFiClientSecure.h>
+#include "deploii_certs.h"
+#endif
+
 #endif // DEPLOII_PROTOCOL
 
 /*************************************************************************************/
@@ -34,6 +42,9 @@ public:
       : _ws()
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
       : _http()
+#if DEPLOII_SSL
+      , _client()
+#endif
 #endif // DEPLOII_PROTOCOL
   {
   };
@@ -127,6 +138,13 @@ public:
 #endif
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
+
+#if DEPLOII_SSL
+    _client.setCACert(buypass_cert);
+    _http.begin(_client, "https://" DEPLOII_HOST ":" STRINGIFY(DEPLOII_PORT) DEPLOII_HTTP_URL);
+#else
+    _http.begin("http://" DEPLOII_HOST ":" STRINGIFY(DEPLOII_PORT) DEPLOII_HTTP_URL);
+#endif
     _http.addHeader("Authorization", boardID, false, false);
 
 #endif // DEPLOII_PROTOCOL
@@ -141,6 +159,10 @@ public:
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
    HTTPClient _http;
+
+#if DEPLOII_SSL
+   WiFiClientSecure _client;
+#endif
 
 #endif  // DEPLOII_PROTOCOL
 
