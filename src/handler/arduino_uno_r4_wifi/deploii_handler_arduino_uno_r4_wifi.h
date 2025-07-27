@@ -109,7 +109,7 @@ public:
     DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "SSL is currently not supported for this device, please set the DEPLOII_SSL macro to false.");
     while(true);
 #else
-    _ws.begin(DEPLOII_HOST, DEPLOII_PORT, DEPLOII_WS_URL);
+    _ws.begin(DEPLOII_HOST, DEPLOII_PORT_NO_SSL, DEPLOII_WS_URL);
 #endif // DEPLOII_SSL
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
