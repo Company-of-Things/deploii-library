@@ -64,6 +64,7 @@ void Deploii::send(MsgPack::str_t dataStreamID, T data)
 template <typename... Args>
 void Deploii::connect(Args &&...args)
 {
+  deploii_debug_init(); 
   _handler->connect(_boardID, std::forward<Args>(args)...);
 }
 
