@@ -10,10 +10,15 @@
  */
 #if defined(ESP32)
 #include "handler/esp32/deploii_handler_esp32.h"
+
+#elif defined(ARDUINO_UNOR4_WIFI)
+#include "handler/arduino_uno_r4_wifi/deploii_handler_arduino_uno_r4_wifi.h"
+
 #else
 #warning "The device you are using is currently not supported by Deploii."
 #define DEPLOII_DEFAULT
 #include "handler/default/deploii_handler_default.h"
+
 #endif
 
 /*************************************************************************************/
