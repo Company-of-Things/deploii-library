@@ -101,9 +101,6 @@ public:
     }else{
       DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Failed to connect to HTTP server");
     }
-    while(_client.available()){
-      Serial.print((char)_client.read());
-    }
     _client.stop();
 #endif // DEPLOII_PROTOCOL
   };
