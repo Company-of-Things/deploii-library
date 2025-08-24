@@ -68,7 +68,11 @@ static_assert(DEPLOII_DEBUG >= DEPLOII_DEBUG_NONE && DEPLOII_DEBUG <= DEPLOII_DE
 #endif // !DEPLOII_HTTP_URL
 
 #ifndef DEPLOII_SSL
+#if (defined(ARDUINO_UNOR4_WIFI) && (DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS))
+#define DEPLOII_SSL false
+#else
 #define DEPLOII_SSL true
+#endif
 #endif // !DEPLOII_SSL
 
 /*************************************************************************************/

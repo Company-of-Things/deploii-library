@@ -13,7 +13,8 @@
 #include <WiFi.h>
 #endif // DEPLOII_MEDIUM
 
-void (*_dataCallback)(uint8_t* data, size_t size){nullptr};
+void _defaultCallback(uint8_t*data, size_t size){};
+void (*_dataCallback)(uint8_t* data, size_t size) = &_defaultCallback;
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
 #include <WebSocketsClient.h>
