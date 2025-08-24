@@ -21,6 +21,9 @@ void (*_dataCallback)(uint8_t* data, size_t size){nullptr};
 
 #endif // DEPLOII_PROTOCOL
 
+void _defaultCallback(uint8_t*data, size_t size){};
+void (*_dataCallback)(uint8_t* data, size_t size)= &_defaultCallback;
+
 /*************************************************************************************/
 
 class DeploiiHandler
