@@ -69,6 +69,10 @@ public:
     _ws.loop(); // must be called in order to reconnect after disconnect
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     // poll data from server
+    if ((previousPollTimeHTTP - millis()) > DEPLOII_HTTP_POLL_RATE && WiFi.status() == WL_CONNECTED) {
+      _httpPollData();
+      previousPollTimeHTTP = millis();
+    }
 #endif // DEPLOII_PROTOCOL
 
   };
@@ -81,8 +85,18 @@ public:
     DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending WEBSOCKET data of size 0x%zx", size);
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
+
+#if DEPLOII_SSL
+    _http.begin(_client, "https://" DEPLOII_HOST ":" STRINGIFY(DEPLOII_PORT) DEPLOII_HTTP_URL);
+#else
+    _http.begin("http://" DEPLOII_HOST ":" STRINGIFY(DEPLOII_PORT_NO_SSL) DEPLOII_HTTP_URL);
+#endif
+    _http.addHeader("Authorization", _boardID, false, false);
+
     _http.POST((uint8_t *)data, size);
     DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending HTTP data of size 0x%zx", size);
+
+    _http.end();
 
 #endif // DEPLOII_PROTOCOL
   };
@@ -127,14 +141,10 @@ public:
 #endif
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
-
+    _boardID = boardID;
 #if DEPLOII_SSL
     _client.setCACert(buypass_cert);
-    _http.begin(_client, "https://" DEPLOII_HOST ":" STRINGIFY(DEPLOII_PORT) DEPLOII_HTTP_URL);
-#else
-    _http.begin("http://" DEPLOII_HOST ":" STRINGIFY(DEPLOII_PORT_NO_SSL) DEPLOII_HTTP_URL);
 #endif
-    _http.addHeader("Authorization", boardID, false, false);
 
 #endif // DEPLOII_PROTOCOL
   };
@@ -147,8 +157,18 @@ public:
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     HTTPClient _http;
+    char* _boardID;
+    unsigned long previousPollTimeHTTP = 0;
 
     void _httpPollData() {
+
+#if DEPLOII_SSL
+      _http.begin(_client, "https://" DEPLOII_HOST ":" STRINGIFY(DEPLOII_PORT) DEPLOII_HTTP_URL);
+#else
+      _http.begin("http://" DEPLOII_HOST ":" STRINGIFY(DEPLOII_PORT_NO_SSL) DEPLOII_HTTP_URL);
+#endif
+    _http.addHeader("Authorization", _boardID, false, false);
+
       int httpCode = _http.GET();
 
       if (httpCode > 0) {
@@ -159,7 +179,10 @@ public:
       } else {
         DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Error fetching HTTP data");
       }
+
+      _http.end();
     }
+
 #if DEPLOII_SSL
     WiFiClientSecure _client;
 #endif
