@@ -67,18 +67,6 @@ public:
   {
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     _ws.loop(); // must be called in order to reconnect after disconnect
-
-    // monitor connection status
-    _websocketConnectionStatus = _ws.isConnected();
-    if (_websocketConnectionStatus != _previousWebsocketConnectionStatus)
-    {
-      if (_websocketConnectionStatus == false)
-        DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Disconnected from Deploii WS server, attempting to connect...");
-      else
-        DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to Deploii WS server");
-    }
-    _previousWebsocketConnectionStatus = _websocketConnectionStatus;
-
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     // poll data from server
 #endif // DEPLOII_PROTOCOL
