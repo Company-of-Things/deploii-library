@@ -172,7 +172,7 @@ public:
 #endif // DEPLOII_MEDIUM
 };
 
-#if DEPLOII_PROTOCOL == DEPLOII_WEBSOCKETS
+#if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
 void _wsEvent(WStype_t type, uint8_t* payload, size_t length) {
    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Websocket event code: %u", type);
    switch (type) {
