@@ -82,6 +82,7 @@ static_assert(DEPLOII_DEBUG >= DEPLOII_DEBUG_NONE && DEPLOII_DEBUG <= DEPLOII_DE
 #define DEPLOII_WIFI_RECONNECT_TIME 1000
 #define DEPLOII_WS_RECONNECT_TIME 2000
 #define DEPLOII_HTTP_RESPONSE_TIMEOUT 5000
+#define DEPLOII_HTTP_POLL_RATE 5000
 
 /*************************************************************************************/
 
