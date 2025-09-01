@@ -128,27 +128,30 @@ public:
 /*************************************************************************************/
 
 void _decodeDataCallback(uint8_t* data, size_t size) {
-   MsgPack::Unpacker unpacker;
-   unpacker.feed(data, size);
+  MsgPack::Unpacker unpacker;
+  unpacker.feed(data, size);
  
-   struct msgStruct
-   {
-     MsgPack::str_t key1;
-     MsgPack::str_t moduleId;
-     MsgPack::str_t key2;
-     MsgPack::str_t data;
-     MsgPack::str_t key3;
-     MsgPack::str_t cardId;
-     MSGPACK_DEFINE_MAP(key1, moduleId, key2, data, key3, cardId);
-   };
-   msgStruct msg;
-   unpacker.deserialize(msg);
+  struct msgStruct
+  {
+    MsgPack::str_t key1;
+    MsgPack::str_t moduleId;
+    MsgPack::str_t key2;
+    MsgPack::str_t data;
+    MsgPack::str_t key3;
+    MsgPack::str_t cardId;
+    MsgPack::str_t key4;
+    MsgPack::str_t type;
+    MsgPack::str_t key5;
+    MsgPack::str_t protocol;
+    MSGPACK_DEFINE_MAP(key1, moduleId, key2, data, key3, cardId, key4, type, key5, protocol);
+  };
+  msgStruct msg;
+  unpacker.deserialize(msg);
 
-  // ignore pings from ws server
-  if (msg.data == "connection_status")
+  if (msg.type != "module_data")
     return;
  
-   _receiveCallback(msg.moduleId, msg.data);
+  _receiveCallback(msg.moduleId, msg.data);
  } 
 
 /*************************************************************************************/
