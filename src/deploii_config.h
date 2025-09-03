@@ -10,13 +10,13 @@
 /*************************************************************************************/
 
 // Mediums
-#define DEPLOII_MEDIUM_WIFI 0
-#define DEPLOII_MEDIUM_NARROWBAND 1
+#define DEPLOII_MEDIUM_WIFI 1 // Undefined evaluates to 0, so we start from 1
+#define DEPLOII_MEDIUM_NARROWBAND 2
 
 // Protocols
-#define DEPLOII_PROTOCOL_WEBSOCKETS 0
-#define DEPLOII_PROTOCOL_HTTP 1
-#define DEPLOII_PROTOCOL_MQTT 2
+#define DEPLOII_PROTOCOL_WEBSOCKETS 1
+#define DEPLOII_PROTOCOL_HTTP 2
+#define DEPLOII_PROTOCOL_MQTT 3
 
 typedef enum
 {
