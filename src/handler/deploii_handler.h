@@ -14,6 +14,10 @@
 #elif defined(ARDUINO_UNOR4_WIFI)
 #include "handler/arduino_uno_r4_wifi/deploii_handler_arduino_uno_r4_wifi.h"
 
+#elif defined(ARDUINO_SAMD_MKRWIFI1010)
+#include "handler/arduino_samd_mkr_wifi_1010/deploii_handler_arduino_samd_mkr_wifi_1010.h"
+
+
 #else
 #warning "The device you are using is currently not supported by Deploii."
 #define DEPLOII_DEFAULT

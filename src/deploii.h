@@ -10,6 +10,7 @@
 
 /*************************************************************************************/
 
+#include <utility>
 #include "Arduino.h"
 #include "deploii_certs.h"
 #include "deploii_config.h"
