@@ -117,6 +117,8 @@ public:
       const char *ssid,
       const char *pwd)
   {
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Attempting to connect to WiFi...");
+
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pwd);
 
