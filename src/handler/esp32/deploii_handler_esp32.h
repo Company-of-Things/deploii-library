@@ -81,8 +81,9 @@ public:
   void send(const uint8_t *data, size_t size)
   {
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
+    if (!_ws.isConnected()) return; // do not attempt sending if not connected
     _ws.sendBIN(data, size);
-    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending WEBSOCKET data of size 0x%zx", size);
+    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WS] Attempting to send data of size 0x%zx", size);
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
 
@@ -94,7 +95,7 @@ public:
     _http.addHeader("Authorization", _boardID, false, false);
 
     _http.POST((uint8_t *)data, size);
-    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending HTTP data of size 0x%zx", size);
+    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[HTTP] Attempting to send data of size 0x%zx", size);
 
     _http.end();
 
@@ -116,17 +117,19 @@ public:
       const char *ssid,
       const char *pwd)
   {
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Attempting to connect to WiFi...");
+
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pwd);
 
     while (WiFi.status() != WL_CONNECTED)
     {
-      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to WiFi...");
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WiFi] Attempting to connect to WiFi...");
       delay(DEPLOII_WIFI_RECONNECT_TIME);
     }
 
     IPAddress ip = WiFi.localIP();
-    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to WiFi with IP %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Connected with IP %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     static char authHeader[60];
@@ -177,7 +180,7 @@ public:
           _dataCallback((uint8_t *)payload.c_str(), (size_t)payload.length());
         }
       } else {
-        DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Error fetching HTTP data");
+        DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[HTTP] Error fetching data");
       }
 
       _http.end();
@@ -198,15 +201,31 @@ public:
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
 void _wsEvent(WStype_t type, uint8_t* payload, size_t length) {
-   DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Websocket event code: %u", type);
-   switch (type) {
-   case WStype_BIN:
-      _dataCallback(payload, length);
+  switch (type) {
+    case WStype_CONNECTED:
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WS] Connected to Deploii");
       break;
 
-   default:
+    case WStype_DISCONNECTED:
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WS] Disconnected from Deploii");
       break;
-   }
+
+    case WStype_BIN:
+       _dataCallback(payload, length);
+       break;
+
+    case WStype_ERROR:
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WS] Error with payload: %x, length: %d", payload, length);
+      break;
+
+    case WStype_PING:
+    case WStype_PONG:
+      break;
+
+    default:
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WS] Unhandled event code: %u", type);
+      break;
+  }
 }
 #endif
 
