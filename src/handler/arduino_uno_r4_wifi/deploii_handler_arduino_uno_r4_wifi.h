@@ -78,7 +78,7 @@ public:
   {
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     _ws.sendBIN(data, size);
-    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending WEBSOCKET data of size 0x%x", size);
+    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WS] Attempting to send data of size 0x%x", size);
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
 
@@ -88,7 +88,7 @@ public:
     if(_client.connect(DEPLOII_HOST, DEPLOII_PORT_NO_SSL))
 #endif // DEPLOII_SSL
     {
-      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Sending HTTP data of size 0x%x", size);
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[HTTP] Attempting to send data of size 0x%x", size);
       _client.println("POST " DEPLOII_HTTP_URL " HTTP/1.1");
       _client.println("Host: " DEPLOII_HOST);
       _client.print("Authorization: ");
@@ -99,7 +99,7 @@ public:
       _client.println();
       _client.write(data, size);
     }else{
-      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Failed to connect to HTTP server");
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[HTTP] Failed to connect to server");
     }
     _client.stop();
 #endif // DEPLOII_PROTOCOL
@@ -116,16 +116,18 @@ public:
       const char *ssid,
       const char *pwd)
   {
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Attempting to connect to WiFi...");
+
     WiFi.begin(ssid, pwd);
 
     while (WiFi.status() != WL_CONNECTED)
     {
-      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to WiFi");
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WiFi] Attempting to connect to WiFi...");
       delay(DEPLOII_WIFI_RECONNECT_TIME);
     }
 
     IPAddress ip = WiFi.localIP();
-    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to WiFi with IP %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Connected with IP %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     static char authHeader[60];
@@ -133,10 +135,9 @@ public:
     _ws.setExtraHeaders(authHeader);
     _ws.onEvent(_wsEvent);
 
-    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Attempting to connect to Websocket server");
 #if DEPLOII_SSL
 #pragma message("Websockets with SSL is currently not supported for this device, please set the DEPLOII_SSL macro to false.")
-    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Websockets with SSL is currently not supported for this device, please set the DEPLOII_SSL macro to false.");
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WS] Websockets with SSL is currently not supported for this device, please set the DEPLOII_SSL macro to false.");
     while(true);
 #else
     _ws.begin(DEPLOII_HOST, DEPLOII_PORT_NO_SSL, DEPLOII_WS_URL);
@@ -149,8 +150,6 @@ public:
 #endif
 
 #endif // DEPLOII_PROTOCOL
-
-    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Connected to Deploii server");
   };
 
  private:
@@ -175,15 +174,31 @@ public:
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
 void _wsEvent(WStype_t type, uint8_t* payload, size_t length) {
-   DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Websocket event code: %u", type);
-   switch (type) {
-   case WStype_BIN:
-      _dataCallback(payload, length);
+  switch (type) {
+    case WStype_CONNECTED:
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WS] Connected to Deploii");
       break;
 
-   default:
+    case WStype_DISCONNECTED:
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WS] Disconnected from Deploii");
       break;
-   }
+
+    case WStype_BIN:
+       _dataCallback(payload, length);
+       break;
+
+    case WStype_ERROR:
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WS] Error with payload: %x, length: %d", payload, length);
+      break;
+
+    case WStype_PING:
+    case WStype_PONG:
+      break;
+
+    default:
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WS] Unhandled event code: %u", type);
+      break;
+  }
 }
 #endif
 
