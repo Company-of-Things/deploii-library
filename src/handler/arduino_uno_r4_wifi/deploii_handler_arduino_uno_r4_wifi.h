@@ -101,6 +101,16 @@ public:
     }else{
       DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Failed to connect to HTTP server");
     }
+    int t0 = millis();
+    while(!_client.available()){ // Wait for response
+      if(millis() - t0 > DEPLOII_HTTP_RESPONSE_TIMEOUT){
+        DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Timeout waiting for HTTP response");
+        break;
+      }
+    } 
+    while(_client.available()){  // Read response
+      _client.read();
+    }
     _client.stop();
 #endif // DEPLOII_PROTOCOL
   };
