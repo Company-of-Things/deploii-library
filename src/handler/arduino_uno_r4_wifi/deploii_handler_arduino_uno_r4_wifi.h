@@ -107,7 +107,7 @@ public:
     int t0 = millis();
     while(!_client.available()){ // Wait for response
       if(millis() - t0 > DEPLOII_HTTP_RESPONSE_TIMEOUT){
-        DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "Timeout waiting for HTTP response");
+        DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[HTTP] Timeout waiting for HTTP response");
         break;
       }
     } 
