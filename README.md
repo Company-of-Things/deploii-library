@@ -80,6 +80,6 @@ Below is a list of all available config paramaters which can easiliy be pasted i
 |                       | WiFi/WebSockets           | WiFi/HTTP                 |
 |-----------------------|---------------------------|---------------------------|
 | ESP32                 |        Yes                |    Yes                    |          
-| Arduino UNO R4 WiFi   |        Yes (no SSL)       |    Yes (only sending)     |
+| Arduino UNO R4 WiFi   |        Yes (no SSL)       |    Yes                    |
 | Arduino MKR WiFi 1010 |        Yes (no SSL)       |    Yes (only sending)     |
 
