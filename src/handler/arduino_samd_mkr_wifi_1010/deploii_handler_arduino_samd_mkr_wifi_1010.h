@@ -68,7 +68,10 @@ public:
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     _ws.loop();
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
-    // poll data from server
+    if ((millis() - previousPollTimeHTTP ) > DEPLOII_HTTP_POLL_RATE) {
+      _httpPollData();
+      previousPollTimeHTTP = millis();
+    }
 #endif // DEPLOII_PROTOCOL
   };
 
@@ -171,6 +174,88 @@ public:
 #else
     WiFiClient _client;
 #endif // DEPLOII_SSL
+    unsigned long previousPollTimeHTTP = 0;
+    void _httpPollData(){
+
+#if DEPLOII_SSL
+      if(_client.connect(DEPLOII_HOST, DEPLOII_PORT))
+#else 
+      if(_client.connect(DEPLOII_HOST, DEPLOII_PORT_NO_SSL))
+#endif // DEPLOII_SSL
+      {
+        _client.println("GET " DEPLOII_HTTP_URL " HTTP/1.1");
+        _client.println("Host: " DEPLOII_HOST);
+        _client.print("Authorization: ");
+        _client.println(_boardID);
+        _client.println();
+      }else{
+        DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[HTTP] Error fetching HTTP data");
+        return;
+      }
+
+      int t0 = millis();
+      while(!_client.available()){ // Wait for response
+        if(millis() - t0 > DEPLOII_HTTP_RESPONSE_TIMEOUT){
+          DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[HTTP] Timeout waiting for HTTP response");
+          return;
+        }
+      } 
+
+      int status;
+      while(_client.available()){  
+        if(_client.read() == ' '){ // Read until status code
+          String temp = "";
+          while(_client.available()){ // Read status
+            char c = _client.read();
+            if(c == '\n' || c == '\r')break;
+            temp += c;
+          }
+          status = temp.toInt();
+          break;
+        }
+      }
+
+      size_t contentLength;
+      char header[] = "Content-Length: ";
+      int i = 0;
+      while(_client.available()){ // Read Content-length header
+        char c = _client.read();
+        if (header[i]==c)i++;
+        else i = 0;
+        if (header[i]=='\0'){
+          String temp = "";
+          while(_client.available()){
+            char c = _client.read();
+            if(c == '\n' || c == '\r')break;
+            temp += c;
+          }
+          contentLength = temp.toInt();
+          break;
+        }
+      }
+
+      char payloadStart[] = "\r\n\r\n"; 
+      i = 0;
+      while(_client.available()){ // Find start of payload
+        char c = _client.read();
+        if (payloadStart[i] == c)i++;
+        else i=0;
+        if (payloadStart[i] == '\0')break;
+      }
+
+      if (status == 200 && contentLength > 0){ // Read payload
+        uint8_t* payload = (uint8_t*)malloc(contentLength);
+        _client.read(payload, contentLength);
+        _client.stop();
+        _dataCallback(payload, contentLength);
+      }
+      else{
+        while(_client.available())
+          _client.read();
+        _client.stop();
+      }
+      DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[HTTP] GET status %u", status);
+    }
 
 #endif  // DEPLOII_PROTOCOL
 
