@@ -146,7 +146,7 @@ public:
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     _boardID = boardID;
 #if DEPLOII_SSL
-    _client.setCACert(buypass_cert);
+    _client.setCACert(deploii_cert);
 #endif
 
 #endif // DEPLOII_PROTOCOL
