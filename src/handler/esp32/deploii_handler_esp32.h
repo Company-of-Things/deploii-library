@@ -69,7 +69,7 @@ public:
     _ws.loop(); // must be called in order to reconnect after disconnect
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
     // poll data from server
-    if ((previousPollTimeHTTP - millis()) > DEPLOII_HTTP_POLL_RATE && WiFi.status() == WL_CONNECTED) {
+    if ((millis() - previousPollTimeHTTP) > DEPLOII_HTTP_POLL_RATE  && (WiFi.status() == WL_CONNECTED)) {
       _httpPollData();
       previousPollTimeHTTP = millis();
     }
