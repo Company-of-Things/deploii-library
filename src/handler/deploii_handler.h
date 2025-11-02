@@ -17,6 +17,9 @@
 #elif defined(ARDUINO_SAMD_MKRWIFI1010)
 #include "handler/arduino_samd_mkr_wifi_1010/deploii_handler_arduino_samd_mkr_wifi_1010.h"
 
+#elif defined(ARDUINO_SAMD_MKRNB1500)
+#include "handler/arduino_samd_mkr_nb_1500/deploii_handler_arduino_samd_mkr_nb_1500.h"
+
 
 #else
 #warning "The device you are using is currently not supported by Deploii."
