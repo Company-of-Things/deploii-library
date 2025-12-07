@@ -10,6 +10,7 @@
 
 #if DEPLOII_MEDIUM == DEPLOII_MEDIUM_WIFI
 #include "WiFiS3.h"
+#include "modem.h"
 
 #endif // DEPLOII_MEDIUM
 
@@ -26,6 +27,7 @@ void _wsEvent(WStype_t type, uint8_t* payload, size_t length);
 
 void _defaultCallback(uint8_t*data, size_t size){};
 void (*_dataCallback)(uint8_t* data, size_t size)= &_defaultCallback;
+int _connectionFailedCountWIFI = 0;
 
 /*************************************************************************************/
 
@@ -73,6 +75,23 @@ public:
       previousPollTimeHTTP = millis();
     }
 #endif // DEPLOII_PROTOCOL
+
+#if DEPLOII_MEDIUM == DEPLOII_MEDIUM_WIFI
+
+    if (_connectionFailedCountWIFI >= DEPLOII_WIFI_CONNECTION_FAIL_LIMIT) {
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Connection failed limit exeeded, reconnecting");
+
+      // tell ESP to reset
+      std::string res = "";
+      if (!modem.write(std::string(PROMPT(_SOFTRESETWIFI)), res, "%s" , CMD(_SOFTRESETWIFI))) {
+        return; // retry
+      }
+
+      delay(1000); // wait for ESP to come back to life
+
+      connect(_boardID, _ssid, _pwd);
+    }
+#endif // DEPLOII_MEDIUM
   };
 
 /*************************************************************************************/
@@ -102,19 +121,22 @@ public:
       _client.println();
       _client.write(data, size);
     }else{
-      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[HTTP] Failed to connect to server");
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[HTTP] Failed to connect to server on POST");
+      _connectionFailedCountWIFI++;
+      return;
     }
     int t0 = millis();
     while(!_client.available()){ // Wait for response
       if(millis() - t0 > DEPLOII_HTTP_RESPONSE_TIMEOUT){
         DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[HTTP] Timeout waiting for HTTP response");
-        break;
+        return;
       }
     } 
     while(_client.available()){  // Read response
       _client.read();
     }
     _client.stop();
+    _connectionFailedCountWIFI = 0;
 #endif // DEPLOII_PROTOCOL
   };
    void setDataCallback(void (*cb)(uint8_t* data, size_t size)) {
@@ -131,6 +153,8 @@ public:
   {
     DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Attempting to connect to WiFi...");
 
+    // modem.debug(Serial, 2);
+
     WiFi.begin(ssid, pwd);
 
     while (WiFi.status() != WL_CONNECTED)
@@ -141,6 +165,8 @@ public:
 
     IPAddress ip = WiFi.localIP();
     DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Connected with IP %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+
+    _connectionFailedCountWIFI = 0;
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     static char authHeader[60];
@@ -157,21 +183,28 @@ public:
 #endif // DEPLOII_SSL
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
-    _boardID = boardID;
 #if DEPLOII_SSL
     _client.setCACert(deploii_cert);
 #endif
 
 #endif // DEPLOII_PROTOCOL
+
+    _boardID = (char *)boardID;
+    _ssid = (char *)ssid;
+    _pwd = (char *)pwd;
   };
 
  private:
+    char *_boardID;
+    char *_ssid;
+    char *_pwd;
+
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
    WebSocketsClient _ws;
 
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
-    char* _boardID;
+
 #if DEPLOII_SSL
     WiFiSSLClient _client;
 #else
@@ -192,7 +225,8 @@ public:
         _client.println(_boardID);
         _client.println();
       }else{
-        DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[HTTP] Error fetching HTTP data");
+        DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[HTTP] Failed to connect to server on GET");
+        _connectionFailedCountWIFI++;
         return;
       }
 
@@ -257,7 +291,9 @@ public:
           _client.read();
         _client.stop();
       }
+  
       DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[HTTP] GET status %u", status);
+      _connectionFailedCountWIFI = 0;
     }
 
 #endif  // DEPLOII_PROTOCOL
@@ -276,10 +312,12 @@ void _wsEvent(WStype_t type, uint8_t* payload, size_t length) {
 
     case WStype_DISCONNECTED:
       DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WS] Disconnected from Deploii");
+      _connectionFailedCountWIFI++;
       break;
 
     case WStype_BIN:
        _dataCallback(payload, length);
+       _connectionFailedCountWIFI = 0;
        break;
 
     case WStype_ERROR:
