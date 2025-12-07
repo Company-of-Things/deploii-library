@@ -15,7 +15,6 @@
 
 void _defaultCallback(uint8_t*data, size_t size){};
 void (*_dataCallback)(uint8_t* data, size_t size)= &_defaultCallback;
-
 /*************************************************************************************/
 
 class DeploiiHandler
@@ -31,7 +30,7 @@ public:
 #if DEPLOII_SSL
     : _client(NB_ROOT_CERTS_LOCAL, NB_NUM_ROOT_CERTS_LOCAL),
       _gprs(),
-      _nbAccess(true)
+      _nbAccess()
 #else
     : _client(),
       _gprs(),
@@ -109,7 +108,7 @@ public:
     while(_client.available()){  // Read response
       _client.read();
     }
-    _client.stop();
+    safeClose();
 #endif // DEPLOII_PROTOCOL
   };
    void setDataCallback(void (*cb)(uint8_t* data, size_t size)) {
@@ -123,7 +122,8 @@ public:
       char *boardID,
       const char* pin)
   {
-
+    _boardID = boardID;
+    _pin = pin;
     DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[Narrowband] Attempting to connect to Narrowband...");
     while(!((_nbAccess.begin(pin) == NB_READY) && (_gprs.attachGPRS() == GPRS_READY))){
         DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[Narrowband] Connection failed. Retrying...");
@@ -134,15 +134,15 @@ public:
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
-    _boardID = boardID;
 #endif // DEPLOII_PROTOCOL
   };
 
  private:
+    char* _boardID;
+    const char* _pin;
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
 
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
-    char* _boardID;
     GPRS _gprs;
     NB _nbAccess;
 
@@ -223,18 +223,27 @@ public:
       if (status == 200 && contentLength > 0){ // Read payload
         uint8_t* payload = (uint8_t*)malloc(contentLength);
         _client.read(payload, contentLength);
-        _client.stop();
+        safeClose();
         _dataCallback(payload, contentLength);
       }
       else{
         while(_client.available())
           _client.read();
-        _client.stop();
+        safeClose();
       }
       DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[HTTP] GET status %u", status);
     }
 
 #endif  // DEPLOII_PROTOCOL
+    void safeClose(){
+      int t0 = millis();
+      _client.stop();
+      if(millis()-t0 > 10000){
+        DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[NARROWBAND] Modem timeout, resetting.");
+        MODEM.hardReset();
+        connect(_boardID, _pin);
+      }
+    }
 
 #else // OTHER MEDIUMS
 
