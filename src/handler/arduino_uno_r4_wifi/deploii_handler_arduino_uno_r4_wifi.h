@@ -79,17 +79,20 @@ public:
 #if DEPLOII_MEDIUM == DEPLOII_MEDIUM_WIFI
 
     if (_connectionFailedCountWIFI >= DEPLOII_WIFI_CONNECTION_FAIL_LIMIT) {
-      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Connection failed limit exeeded, reconnecting");
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Connection fail limit exeeded, attempting to recover");
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Resetting ESP modem...");
 
       // tell ESP to reset
       std::string res = "";
-      if (!modem.write(std::string(PROMPT(_SOFTRESETWIFI)), res, "%s" , CMD(_SOFTRESETWIFI))) {
-        return; // retry
-      }
+      modem.write_nowait(std::string(PROMPT(_RESET)), res, "%s" , CMD(_RESET));
 
-      delay(1000); // wait for ESP to come back to life
+      // wait for ESP to come back
+      while (!modem.write(std::string(PROMPT(_SOFTRESETWIFI)), res, "%s" , CMD(_SOFTRESETWIFI)));
 
-      connect(_boardID, _ssid, _pwd);
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Resetting ARM core...");
+
+      // system reset of the Renesas ARM core
+      NVIC_SystemReset();
     }
 #endif // DEPLOII_MEDIUM
   };
@@ -136,12 +139,15 @@ public:
       _client.read();
     }
     _client.stop();
-    _connectionFailedCountWIFI = 0;
+
 #endif // DEPLOII_PROTOCOL
+
+    _connectionFailedCountWIFI = 0;
   };
-   void setDataCallback(void (*cb)(uint8_t* data, size_t size)) {
-      _dataCallback = cb;
-   }
+
+  void setDataCallback(void (*cb)(uint8_t* data, size_t size)) {
+    _dataCallback = cb;
+  }
 
 /*************************************************************************************/
 
@@ -152,8 +158,6 @@ public:
       const char *pwd)
   {
     DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Attempting to connect to WiFi...");
-
-    // modem.debug(Serial, 2);
 
     WiFi.begin(ssid, pwd);
 
@@ -308,6 +312,7 @@ void _wsEvent(WStype_t type, uint8_t* payload, size_t length) {
   switch (type) {
     case WStype_CONNECTED:
       DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WS] Connected to Deploii");
+      _connectionFailedCountWIFI = 0;
       break;
 
     case WStype_DISCONNECTED:
