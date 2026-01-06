@@ -139,10 +139,8 @@ public:
       _client.read();
     }
     _client.stop();
-
-#endif // DEPLOII_PROTOCOL
-
     _connectionFailedCountWIFI = 0;
+#endif // DEPLOII_PROTOCOL
   };
 
   void setDataCallback(void (*cb)(uint8_t* data, size_t size)) {
