@@ -77,7 +77,7 @@ static_assert(DEPLOII_DEBUG >= DEPLOII_DEBUG_NONE && DEPLOII_DEBUG <= DEPLOII_DE
 
 /*************************************************************************************/
 
-#define DEPLOII_SERIAL_BAUDRATE 115200
+#define DEPLOII_SERIAL_BAUDRATE 9600
 #define DEPLOII_MAX_INTERVALS 10
 #define DEPLOII_WIFI_RECONNECT_TIME 1000
 #define DEPLOII_WIFI_CONNECTION_FAIL_LIMIT 5
