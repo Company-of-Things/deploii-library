@@ -10,7 +10,6 @@
 
 #if DEPLOII_MEDIUM == DEPLOII_MEDIUM_WIFI
 #include "WiFiS3.h"
-#include "modem.h"
 
 #endif // DEPLOII_MEDIUM
 
