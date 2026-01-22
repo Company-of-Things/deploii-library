@@ -77,11 +77,11 @@ Below is a list of all available config paramaters which can easiliy be pasted i
 
 # Currently supported MCUs and protocols
 
-|                            | WiFi/WebSockets           | WiFi/HTTP                 |
-|----------------------------|---------------------------|---------------------------|
-| ESP32                      |        Yes                |    Yes                    |          
-| Arduino UNO R4 WiFi        |        Yes (no SSL)       |    Yes                    |
-| Arduino MKR WiFi 1010 [^1] |        Yes (no SSL)       |    Yes                    |
-| Arduino MKR NB 1500        |        No                 |    Yes                    |
+|                            | WiFi/WebSockets           | WiFi/HTTP                 | Narrowband/HTTP            |
+|----------------------------|---------------------------|---------------------------|----------------------------|
+| ESP32                      |        Yes                |    Yes                    |   No                       |
+| Arduino UNO R4 WiFi        |        Yes (no SSL)       |    Yes                    |   No                       |
+| Arduino MKR WiFi 1010 [^1] |        Yes (no SSL)       |    Yes                    |   No                       |
+| Arduino MKR NB 1500        |        No                 |    No                     |   Yes                      |
 
 [^1]: In order to use SSL, you might have to manually upload the SSL certificate for deploii. For more information see [this page](https://support.arduino.cc/hc/en-us/articles/360016119219-Upload-SSL-root-certificates).
