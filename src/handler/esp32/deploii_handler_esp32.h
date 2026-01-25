@@ -15,6 +15,7 @@
 
 void _defaultCallback(uint8_t*data, size_t size){};
 void (*_dataCallback)(uint8_t* data, size_t size) = &_defaultCallback;
+int _connectionFailedCountWIFI = 0;
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
 #include <WebSocketsClient.h>
@@ -74,6 +75,16 @@ public:
       previousPollTimeHTTP = millis();
     }
 #endif // DEPLOII_PROTOCOL
+
+#if DEPLOII_MEDIUM == DEPLOII_MEDIUM_WIFI
+
+    if (_connectionFailedCountWIFI >= DEPLOII_WIFI_CONNECTION_FAIL_LIMIT) {
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Connection fail limit exeeded, attempting to recover");
+      DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Resetting ESP core...");
+
+      ESP.restart();
+    }
+#endif // DEPLOII_MEDIUM
 
   };
 /*************************************************************************************/
@@ -204,14 +215,17 @@ void _wsEvent(WStype_t type, uint8_t* payload, size_t length) {
   switch (type) {
     case WStype_CONNECTED:
       DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WS] Connected to Deploii");
+      _connectionFailedCountWIFI = 0;
       break;
 
     case WStype_DISCONNECTED:
       DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WS] Disconnected from Deploii");
+      _connectionFailedCountWIFI++;
       break;
 
     case WStype_BIN:
        _dataCallback(payload, length);
+       _connectionFailedCountWIFI = 0;
        break;
 
     case WStype_ERROR:
