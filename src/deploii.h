@@ -49,6 +49,7 @@ public:
   ~Deploii()
   {
     free(_handler);
+    free(_batch);
   };
 
   /*
@@ -78,6 +79,12 @@ public:
   {
     _handler->loop();
     checkIntervals();
+
+    if (_batchsize == 0) return;
+    _handler->send(_batch, _batchsize);
+    free(_batch);
+    _batch = nullptr;
+    _batchsize = 0;
   };
 
   /*
@@ -102,6 +109,8 @@ public:
  private:
    char* _boardID;
    DeploiiHandler* _handler;
+   uint8_t* _batch = nullptr; 
+   size_t _batchsize = 0;
 
   /*
    * Crude concurrency, keeps track of and calls interval callbacks
