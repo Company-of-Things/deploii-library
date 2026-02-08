@@ -140,8 +140,11 @@ public:
       delay(DEPLOII_WIFI_RECONNECT_TIME);
     }
 
+    // Wait until IP address is assigned (not 0.0.0.0)
+    while(WiFi.localIP()[0]==0);
     IPAddress ip = WiFi.localIP();
-    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Connected with IP %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+    DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Connected");
+    DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WiFi] IP address: %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
     static char authHeader[60];
