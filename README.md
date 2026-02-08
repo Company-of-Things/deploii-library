@@ -70,6 +70,7 @@ Below is a list of all available config paramaters which can easiliy be pasted i
 #define DEPLOII_DEBUG DEPLOII_DEBUG_INFO
 #define DEPLOII_HOST "deploii.no"
 #define DEPLOII_PORT 443
+#define DEPLOII_PORT_NO_SSL 80
 #define DEPLOII_WS_URL "/mcu/ws"
 #define DEPLOII_HTTP_URL "/mcu/data"
 #define DEPLOII_SSL true
