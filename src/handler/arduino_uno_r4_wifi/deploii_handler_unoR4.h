@@ -15,8 +15,12 @@
 #include "handler/arduino_uno_r4_wifi/deploii_handler_unoR4_wifi_ws.h"
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
 #include "handler/arduino_uno_r4_wifi/deploii_handler_unoR4_wifi_http.h"
+#else
+#error "Unsupported protocol for Arduino UNO R4 Wifi"
 #endif // DEPLOII_PROTOCOL
 
+#else
+#error "Unsupported medium for Arduino UNO R4 Wifi"
 #endif // DEPLOII_MEDIUM
 
 /*************************************************************************************/

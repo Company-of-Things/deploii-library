@@ -15,8 +15,12 @@
 #include "handler/arduino_samd_mkr_wifi_1010/deploii_handler_mkr1010_wifi_ws.h"
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
 #include "handler/arduino_samd_mkr_wifi_1010/deploii_handler_mkr1010_wifi_http.h"
+#else
+#error "Unsupported protocol for Arduino MKR Wifi 1010"
 #endif // DEPLOII_PROTOCOL
 
+#else
+#error "Unsupported medium for Arduino MKR Wifi 1010"
 #endif // DEPLOII_MEDIUM
 
 /*************************************************************************************/

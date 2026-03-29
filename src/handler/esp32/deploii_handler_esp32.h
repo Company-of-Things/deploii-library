@@ -15,8 +15,12 @@
 #include "handler/esp32/deploii_handler_esp32_wifi_ws.h"
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
 #include "handler/esp32/deploii_handler_esp32_wifi_http.h"
+#else
+#error "Unsupported protocol for ESP32"
 #endif // DEPLOII_PROTOCOL
 
+#else
+#error "Unsupported medium for ESP32"
 #endif // DEPLOII_MEDIUM
 
 /*************************************************************************************/
