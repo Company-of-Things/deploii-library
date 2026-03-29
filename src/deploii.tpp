@@ -83,7 +83,7 @@ template <typename... Args>
 void Deploii::connect(Args &&...args)
 {
   deploii_debug_init(); 
-  _handler->connect(_boardID, std::forward<Args>(args)...);
+  _handler->connect(std::forward<Args>(args)...);
 }
 
 /*************************************************************************************/
