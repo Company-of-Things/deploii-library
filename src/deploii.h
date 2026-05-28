@@ -44,8 +44,8 @@ public:
   Deploii(char *boardID)
       : _boardID(boardID),
         _handler(new DeploiiHandler(boardID)),
-        _intervalCount(0) {
-        };
+        _intervalCount(0) {};
+
   ~Deploii()
   {
     free(_handler);

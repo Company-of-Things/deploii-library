@@ -19,6 +19,14 @@
 #error "Unsupported protocol for Arduino UNO R4 Wifi"
 #endif // DEPLOII_PROTOCOL
 
+#elif DEPLOII_MEDIUM == DEPLOII_MEDIUM_BLUETOOTH
+
+#if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_BLE
+#include "handler/arduino_uno_r4_wifi/deploii_handler_unoR4_bluetooth_ble.h"
+#else
+#error "Unsupported protocol for Arduino UNO R4 Wifi"
+#endif // DEPLOII_PROTOCOL
+
 #else
 #error "Unsupported medium for Arduino UNO R4 Wifi"
 #endif // DEPLOII_MEDIUM

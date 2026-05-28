@@ -28,13 +28,14 @@ void Deploii::send(MsgPack::str_t dataStreamID, const T (&data)[length])
   packer.serialize(msg);
 
   // Add the MsgPack to the current batch
-  void* p = realloc(_batch, _batchsize+packer.size());
-  if (p==nullptr){
+  void *p = realloc(_batch, _batchsize + packer.size());
+  if (p == nullptr)
+  {
     DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Batch allocation failed");
     return;
   }
-  _batch = (uint8_t*) p;
-  memcpy(_batch+_batchsize, packer.data(), packer.size());
+  _batch = (uint8_t *)p;
+  memcpy(_batch + _batchsize, packer.data(), packer.size());
   _batchsize += packer.size();
 }
 
@@ -63,13 +64,14 @@ void Deploii::send(MsgPack::str_t dataStreamID, T data)
   packer.serialize(msg);
 
   // Add the MsgPack to the current batch
-  void* p = realloc(_batch, _batchsize+packer.size());
-  if (p==nullptr){
+  void *p = realloc(_batch, _batchsize + packer.size());
+  if (p == nullptr)
+  {
     DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "Batch allocation failed");
     return;
   }
-  _batch = (uint8_t*) p;
-  memcpy(_batch+_batchsize, packer.data(), packer.size());
+  _batch = (uint8_t *)p;
+  memcpy(_batch + _batchsize, packer.data(), packer.size());
   _batchsize += packer.size();
 }
 
@@ -82,7 +84,7 @@ void Deploii::send(MsgPack::str_t dataStreamID, T data)
 template <typename... Args>
 void Deploii::connect(Args &&...args)
 {
-  deploii_debug_init(); 
+  deploii_debug_init(); // must run in void setup()
   _handler->connect(std::forward<Args>(args)...);
 }
 
