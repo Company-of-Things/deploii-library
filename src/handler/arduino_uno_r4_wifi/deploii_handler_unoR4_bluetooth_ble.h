@@ -62,10 +62,13 @@ public:
     size_t payload_max_size = DEPLOII_BLE_BUFFER_MAX_SIZE - 1; // account for header_byte
     size_t packet_number = size / payload_max_size + (size % payload_max_size != 0);
 
-    uint8_t header_byte = packet_number; // number of packets to expect
-
-    while (header_byte >= DEPLOII_BLE_PACKET_END_BYTE)
+    while (packet_number > 0xFF)
       DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[BLUETOOTH] Packet size is too large");
+
+    // the header byte is the first byte of each transferred packet
+    // it contains the number of remaining packets to expect
+    // if the the server does not receive the expected number of packets, the transfer is discarded
+    uint8_t header_byte = packet_number - 1;
 
     uint8_t *packet_buffer = (uint8_t *)malloc(DEPLOII_BLE_BUFFER_MAX_SIZE);
 
@@ -87,7 +90,7 @@ public:
       if (remaining_bytes == 0)
         break;
 
-      header_byte = remaining_bytes < payload_max_size ? DEPLOII_BLE_PACKET_END_BYTE : 0x00;
+      header_byte--;
     }
 
     free(packet_buffer);
