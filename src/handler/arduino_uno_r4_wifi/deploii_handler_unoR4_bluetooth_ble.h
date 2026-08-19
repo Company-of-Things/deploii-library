@@ -67,7 +67,7 @@ public:
 
     // the header byte is the first byte of each transferred packet
     // it contains the number of remaining packets to expect
-    // if the the server does not receive the expected number of packets, the transfer is discarded
+    // if the server does not receive the expected number of packets, the transfer is discarded
     uint8_t header_byte = packet_number - 1;
 
     uint8_t *packet_buffer = (uint8_t *)malloc(DEPLOII_BLE_BUFFER_MAX_SIZE);
@@ -118,8 +118,8 @@ public:
     }
 
     // displayed in device list in browser
-    BLE.setLocalName("Deploii Card");
-    BLE.setDeviceName("Deploii Card");
+    BLE.setLocalName("Arduino UNO R4");
+    BLE.setDeviceName("Arduino UNO R4");
 
     BLE.setAdvertisedService(deploiiService);
 
