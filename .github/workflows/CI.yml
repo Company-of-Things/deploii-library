@@ -2,7 +2,6 @@ name: CI
 
 on:
   - push
-  - pull_request
 
 env:
   GLOBAL_LIBS: |
@@ -38,10 +37,9 @@ jobs:
           fqbn: ${{ matrix.fqbn }}
           libraries: ${{env.GLOBAL_LIBS}}
 
-
   build-for-esp32:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         fqbn:
