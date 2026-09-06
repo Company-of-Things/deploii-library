@@ -82,7 +82,10 @@ public:
   {
     DEPLOII_DPRINT(DEPLOII_DEBUG_INFO, "[WiFi] Attempting to connect to WiFi...");
 
-    WiFi.begin(ssid, pwd);
+    if (pwd[0] == '\0')
+      WiFi.begin(ssid, nullptr); // Pass nullptr for networks without password
+    else
+      WiFi.begin(ssid, pwd);
 
     while (WiFi.status() != WL_CONNECTED)
     {
