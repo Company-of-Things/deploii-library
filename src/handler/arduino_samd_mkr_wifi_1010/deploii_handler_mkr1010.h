@@ -1,7 +1,7 @@
 /*************************************************************************************/
 
-#ifndef DEPLOII_HANDLER_ESP32_h
-#define DEPLOII_HANDLER_ESP32_h
+#ifndef DEPLOII_HANDLER_MKR1010_h
+#define DEPLOII_HANDLER_MKR1010_h
 
 /*************************************************************************************/
 
@@ -12,19 +12,19 @@
 #if DEPLOII_MEDIUM == DEPLOII_MEDIUM_WIFI
 
 #if DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_WEBSOCKETS
-#include "handler/esp32/deploii_handler_esp32_wifi_ws.h"
+#include "handler/arduino_samd_mkr_wifi_1010/deploii_handler_mkr1010_wifi_ws.h"
 #elif DEPLOII_PROTOCOL == DEPLOII_PROTOCOL_HTTP
-#include "handler/esp32/deploii_handler_esp32_wifi_http.h"
+#include "handler/arduino_samd_mkr_wifi_1010/deploii_handler_mkr1010_wifi_http.h"
 #else
-#error "Unsupported protocol for ESP32"
+#error "Unsupported protocol for Arduino MKR Wifi 1010"
 #endif // DEPLOII_PROTOCOL
 
 #else
-#error "Unsupported medium for ESP32"
+#error "Unsupported medium for Arduino MKR Wifi 1010"
 #endif // DEPLOII_MEDIUM
 
 /*************************************************************************************/
 
-#endif // DEPLOII_HANDLER_ESP32_h
+#endif // DEPLOII_HANDLER_MKR1010_h
 
 /*************************************************************************************/

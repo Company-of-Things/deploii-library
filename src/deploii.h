@@ -10,13 +10,13 @@
 
 /*************************************************************************************/
 
-#include <utility>
 #include "Arduino.h"
+#include "MsgPack.h"
 #include "deploii_certs.h"
 #include "deploii_config.h"
-#include "handler/deploii_handler.h"
 #include "deploii_debug.h"
-#include "MsgPack.h"
+#include "handler/deploii_handler.h"
+#include <utility>
 
 /*************************************************************************************/
 
@@ -31,7 +31,7 @@ struct Interval
 };
 
 void (*_receiveCallback)(String ID, String data){nullptr};
-void _decodeDataCallback(uint8_t* data, size_t size);
+void _decodeDataCallback(uint8_t *data, size_t size);
 
 /*************************************************************************************/
 
@@ -43,9 +43,9 @@ public:
    */
   Deploii(char *boardID)
       : _boardID(boardID),
-        _handler(new DeploiiHandler),
-        _intervalCount(0) {
-        };
+        _handler(new DeploiiHandler(boardID)),
+        _intervalCount(0) {};
+
   ~Deploii()
   {
     free(_handler);
@@ -80,7 +80,8 @@ public:
     _handler->loop();
     checkIntervals();
 
-    if (_batchsize == 0) return;
+    if (_batchsize == 0)
+      return;
     _handler->send(_batch, _batchsize);
     free(_batch);
     _batch = nullptr;
@@ -101,16 +102,17 @@ public:
     _intervalCount++;
   };
 
-   void receive(void (*cb)(String ID, String data)) {
-      _receiveCallback = cb;
-      _handler->setDataCallback(_decodeDataCallback);
-   }
+  void receive(void (*cb)(String ID, String data))
+  {
+    _receiveCallback = cb;
+    _handler->setDataCallback(_decodeDataCallback);
+  }
 
- private:
-   char* _boardID;
-   DeploiiHandler* _handler;
-   uint8_t* _batch = nullptr; 
-   size_t _batchsize = 0;
+private:
+  char *_boardID;
+  DeploiiHandler *_handler;
+  uint8_t *_batch = nullptr;
+  size_t _batchsize = 0;
 
   /*
    * Crude concurrency, keeps track of and calls interval callbacks
@@ -137,10 +139,11 @@ public:
 
 /*************************************************************************************/
 
-void _decodeDataCallback(uint8_t* data, size_t size) {
+void _decodeDataCallback(uint8_t *data, size_t size)
+{
   MsgPack::Unpacker unpacker;
   unpacker.feed(data, size);
- 
+
   struct msgStruct
   {
     MsgPack::str_t key1;
@@ -160,9 +163,9 @@ void _decodeDataCallback(uint8_t* data, size_t size) {
 
   if (msg.type != "module_data")
     return;
- 
+
   _receiveCallback(msg.moduleId, msg.data);
- } 
+}
 
 /*************************************************************************************/
 

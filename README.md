@@ -29,30 +29,36 @@ The first thing you want to do is to use macros to specify your medium and proto
 
 Deploii oi("Board ID");
 ```
-In the setup function of the Arduino sketch, you need to call the connect function to connect to Deploii. The parameters of the connect function will vary based on your selected medium and protocol. For connection with Wifi and WebSockets this looks like:
+In the setup function of the Arduino sketch, you need to call the connect function to connect to Deploii. The parameters of the connect function will vary based on your selected medium and protocol. For connection with Wifi this looks like:
 ```c++
 void setup() {
  oi.connect("WiFi SSID", "WiFi Password");
 }
 ```
+For Bluetooth the connect function takes no arguments, and for Narrowband it takes the sim card pin code.
+
 Now you can send data using the send function and providing a data stream ID and a variable containing your data. The send function works on all datatypes and arrays. 
 ```c++
 oi.send("Data stream ID", data);
 ```
+
 If you want to do repeated tasks such as sending data at a set interval, you can use the interval function. You call the interval function in setup to register an interval. The function takes an interval specified in milliseconds and a function to be executed at that interval. 
 ```c++
 oi.interval(1000, myFunction);
 ```
+
 In order to receive data from the Deploii control panel you need to register a callback with the receive function in setup. This callback function takes in the control panel module ID and its corresponding data, both as a String, and is called every time the MCU receives data. 
 ```c++
 oi.receive(myCallback);
 ```
+
 For protocols that maintain a persistent connection, such as the WebSocket protocol or when using intervals, it is required that you call the Deploii loop function inside of the arduino void loop. You also cannot use delays or other blocking code when using these protocols as they might break the connection.
 ```c++
 void loop(){
   oi.loop();
 }
 ```
+
 By default, the library has a debug level set to INFO. the available debug levels are NONE, INFO and VERBOSE. Debug messages are printed to Serial, therefore Serial.begin() will be called from the debugger for all levels above NONE. Changing the debug level can be done with the following macro, which needs to happen before the inclusion of the deploii library.
 ```c++
 #define DEPLOII_DEBUG DEPLOII_DEBUG_VERBOSE
@@ -78,11 +84,11 @@ Below is a list of all available config paramaters which can easiliy be pasted i
 
 # Currently supported MCUs and protocols
 
-|                            | WiFi/WebSockets           | WiFi/HTTP                 | Narrowband/HTTP            |
-|----------------------------|---------------------------|---------------------------|----------------------------|
-| ESP32                      |        Yes                |    Yes                    |   No                       |
-| Arduino UNO R4 WiFi        |        Yes (no SSL)       |    Yes                    |   No                       |
-| Arduino MKR WiFi 1010 [^1] |        Yes (no SSL)       |    Yes                    |   No                       |
-| Arduino MKR NB 1500        |        No                 |    No                     |   Yes                      |
+|                            | WiFi/WebSockets           | WiFi/HTTP                 | Narrowband/HTTP            | Bluetooth/BLE              |
+|----------------------------|---------------------------|---------------------------|----------------------------|----------------------------|
+| ESP32                      |        Yes                |    Yes                    |   No                       |   No                       |
+| Arduino UNO R4 WiFi        |        Yes (no SSL)       |    Yes                    |   No                       |   Yes                      |
+| Arduino MKR WiFi 1010 [^1] |        Yes (no SSL)       |    Yes                    |   No                       |   No                       |
+| Arduino MKR NB 1500        |        No                 |    No                     |   Yes                      |   No                       |
 
 [^1]: In order to use SSL, you might have to manually upload the SSL certificate for deploii. For more information see [this page](https://support.arduino.cc/hc/en-us/articles/360016119219-Upload-SSL-root-certificates).
