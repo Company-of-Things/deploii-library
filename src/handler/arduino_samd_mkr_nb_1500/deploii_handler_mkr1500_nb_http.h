@@ -225,6 +225,7 @@ private:
       _client.read(payload, contentLength);
       safeClose();
       _dataCallback(payload, contentLength);
+      free(payload);
     }
     else
     {
