@@ -140,6 +140,10 @@ void _wsEvent(WStype_t type, uint8_t *payload, size_t length)
     DEPLOII_DPRINT(DEPLOII_DEBUG_VERBOSE, "[WS] Error with payload: %x, length: %d", payload, length);
     break;
 
+  case WStype_TEXT:
+    DEPLOII_DPRINT_server_response(DEPLOII_DEBUG_INFO, "[WS] Server error response", (char *)payload);
+    break;
+
   case WStype_PING:
   case WStype_PONG:
     break;
