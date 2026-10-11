@@ -265,6 +265,7 @@ private:
       _client.read(payload, contentLength);
       _client.stop();
       _dataCallback(payload, contentLength);
+      free(payload);
     }
     else
     {

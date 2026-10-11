@@ -46,6 +46,39 @@ void DEPLOII_DPRINT(deploii_debug_t log_level, Args &&...args)
 
 /*************************************************************************************/
 
+/*
+ * Print multiline server response delimited by ';'
+ * log_header is printed as a header line for the log message
+ * response_msg is a null terminated string with ';' line delimiters
+ */
+void DEPLOII_DPRINT_server_response(deploii_debug_t log_level, char *log_header, char *response_msg)
+{
+  char *msg_start = response_msg;
+  char *msg_end = NULL;
+
+  if (log_level == DEPLOII_DEBUG_INFO)
+    Serial.print("DEPLOII DEBUG INFO: ");
+  else if (log_level == DEPLOII_DEBUG_VERBOSE)
+    Serial.print("DEPLOII DEBUG VERBOSE: ");
+  Serial.println(String(log_header));
+
+  while (true)
+  {
+    msg_end = strchr(msg_start, ';');
+    if (msg_end != NULL)
+      msg_start[msg_end - msg_start] = '\0';
+
+    Serial.print("                          ");
+    Serial.println(String(msg_start));
+
+    if (msg_end == NULL)
+      break;
+    msg_start = msg_end + 1;
+  }
+}
+
+/*************************************************************************************/
+
 #endif // !DEPLOII_DEBUG_h
 
 /*************************************************************************************/
